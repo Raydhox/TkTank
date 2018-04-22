@@ -5,7 +5,8 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#A faire: Une meilleure IA; un mode réseau.
+#Version: Alpha-Béta (Pour que je puisse me repérer).
+#Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
 #Jeu inspirée de:
@@ -639,9 +640,10 @@ class Main():
 			self.canvas.create_text(520, 320, justify='center', font='Time_New_Roman 10', text=message)
 			#Evènement pour passer à la suite
 			self.fenetre.bind('<Return>', self.main.start)
+			self.fenetre.bind('<Escape>', self.restart)
 			
 	def quickprint(self, terrain, Joueurs):
-		#On efface ce qu'il y avait avant
+		#On efface ce qu'il y avait avant.
 		self.canvas.create_rectangle(0, 0, 1040, 640, width=0, fill="NavajoWhite")
 		#On parcours la liste et en fonction des valeurs, on affiche une brique ou non
 		for k1 in range(16):
@@ -709,6 +711,9 @@ class Main():
 		#On affiche le titre
 		self.canvas.create_text(520, 100, font="Comic_Sans_MS 100", fill="DarkGoldenRod", text="TkTank")
 		#On affiche les modes de jeu disponible
+		#===Défis===
+		self.canvas.create_rectangle(40, 40, 120, 120, width=1)
+		self.canvas.create_text(80, 80, font="Comic_Sans_MS 20", fill="DarkGoldenRod", text="Défis")
 		#===Solo===
 		#Histoire
 		self.canvas.create_rectangle(140, 260, 380, 340, width=4)
@@ -723,6 +728,9 @@ class Main():
 		#Bataille
 		self.canvas.create_rectangle(660, 460, 900, 540, width=4)
 		self.canvas.create_text(780, 500, font="Comic_Sans_MS 40", fill="DarkGoldenRod", text="Bataille")
+		#===Astuce===
+		self.canvas.create_text(520, 620, font="Comic_Sans_MS 10", fill="NavajoWhite",
+								text="Astuce: Vous pouvez à tout moment revenir au Menu en appuyant sur Echap.")
 		
 		#Evènement
 		self.canvas.bind('<Button-1>', self.start)
@@ -733,19 +741,27 @@ class Main():
 		
 	def start(self, event):
 		#Si on clique sur un bouton:
-		#	Et on lance le mode de jeu choisis		
+		#	On supprime le Menu...
+		#	...et on lance le mode de jeu choisis
+		def delMenu():
+			self.canvas.unbind('<Button-1>')
+			self.canvas.unbind('<Button-3>')	
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
+				delMenu()
 				self.main = Histoire()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
+				delMenu()
 				self.main = SansFin()
 				self.main.afficher()
 		elif (event.x >= 660) and (event.x <= 900):
 			if (event.y >= 260) and (event.y <= 340):
+				delMenu()
 				self.main = Coop()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
+				delMenu()
 				self.main = Bataille()
 				self.main.afficher()
 	
@@ -786,8 +802,8 @@ class Histoire:
 		+"Je me présente: TkTank. Je divulgâche:"+'\n'
 		+"Je suis le boss final de ce jeu (pour ne pas dire, le jeu)." +'\n'
 		+"Je me suis permis de pirater votre PC. (Je m'ennuyais.)" +'\n'
-		+"Et comme j'aime bien voir les rageux rageaient..." +'\n'
-		+"Mais vous semblez ne pas faire le poids; qu'importe." +'\n'
+		+"Et comme j'aime bien voir les rageux rager..." +'\n'
+		+"Mais vous ne semblez pas faire le poids; qu'importe." +'\n'
 		+"Vous ferez l'affaire, et je me délecterai de votre courroux!" +'\n\n'
 		+"Mais faisons cela dans les règles. Voici les touches: " +'\n'
 		+"Flèches_directionnelles / zqsd / wasd : se déplacer" +'\n'
@@ -879,7 +895,7 @@ class Mission1:
 		+"Dans le cas contraire, je vous attends à la mission 5." +'\n\n'
 		+"Et dans mon infime bonté, -je sais, je sais, merci" +'\n'
 		+"une information importante: les ennemis sont immunisés" +'\n'
-		+"à toute les balles ennemis. Vous seul pouvez les abbattre." +'\n'
+		+"à toutes les balles ennemies. Vous seul pouvez les abbattre." +'\n'
 		+"(C'est un bogue, désolé >:-)" +'\n\n'		
 		+"Appuyez sur Entrée pour commencer.")
 
@@ -967,7 +983,7 @@ class Mission2:
 		+"Il faut avouer: vous avez bien assuré(e)(s)" +'\n'
 		+"pour la mission 1! Voyons, voyons," +'\n'
 		+"il reste 4 missions avant notre rencontre..." +'\n'
-		+"Que pourrais-je bien vous proposez? Eurêka!" +'\n'
+		+"Que pourrais-je bien vous proposer? Eurêka!" +'\n'
 		+"Puisque je suis impatient de vous rencontrer," +'\n'
 		+"je vous redonne la même mission... Mais hâtez-vous!" +'\n\n'
 		+"Ah! Et j'ai oublié de vous dire:" +'\n'
@@ -1070,12 +1086,12 @@ class Mission3:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 3: " +root.nom +" goutez à la quiétude!"+'\n\n'
+		root.display("Mission 3: " +root.nom +" goûtez à la quiétude!"+'\n\n'
 		+"Il faut avouer que la mission 2 était un peu hardue..." +'\n'
 		+"Comme je suis magnanime -pas la peine de me remercier-" +'\n'
 		+"votre troisième mission sera simple: rassénérez-vous!" +'\n'
 		+"Allez boire un café/thé/chocolat chaud, étirez-vous..." +'\n'
-		+"Et quand vous aurez fini, faîtes le moi savoir." +'\n'
+		+"Et quand vous aurez fini, faîtes-le moi savoir." +'\n'
 		+"Comment? Bonne question, lol." +'\n\n'
 		+"Appuyez sur Entrée pour commencer.")
 
@@ -1147,9 +1163,9 @@ class Mission4:
 		+"Rares sont les joueurs qui réussissent à m'affronter." +'\n'
 		+"Au fait: félicitation d'avoir trouver la solution" +'\n'
 		+"à la mission 3. Moi-même j'avais oublié la solution;" +'\n'
-		+"j'ai dû de regarder le code source, pour vous dire..." +'\n'
-		+"Peut-être que finalement, je vous ai jugé trop vite." +'\n'
-		+"Si tel est le cas, retrouvez moi:" +'\n'
+		+"j'ai dû regarder le code source, pour vous dire..." +'\n'
+		+"Peut-être que finalement, je vous ai jugé(e)(s) trop vite." +'\n'
+		+"Si tel est le cas, retrouvez-moi:" +'\n'
 		+"Empruntez le téléporteur noté 'x' en rouge." +'\n'
 		+"Mais faîtes vite, j'ai de nombreuses qualités," +'\n'
 		+"mais pas la patience. (Mais je reste parfait)" +'\n\n'
@@ -1353,9 +1369,9 @@ class Mission6:
 		root.display("Mission 6: " +root.nom +", je te hais!" +'\n\n'
 		+"Personne n'avait osé m'humilier comme cela avant!" +'\n'
 		+"J'ai bien dis, personne, PERSONNE!!" +'\n'
-		+"Mais tu ne pas encore vaincu... N'oublie pas!" +'\n'
-		+"Je suis le boss finale de ce jeu. Je suis le jeu." +'\n'
-		+"Je suis TkTank!! Et c'est moi qui vous regarde rageait." +'\n'
+		+"Mais tu ne m'as pas encore vaincu... N'oublie pas!" +'\n'
+		+"Je suis le boss final de ce jeu. Je suis le jeu." +'\n'
+		+"Je suis TkTank!! Et c'est moi qui vous regarde rager." +'\n'
 		+"Non l'inverse. Mais je ne suis pas encore vaincu:" +'\n'
 		+"<<tktank@" +root.nom +":~# " +"sudo tktank install firewall" +'\n'
 		+"Veuillez choisir votre mot de passe." +'\n'
@@ -1459,7 +1475,7 @@ class Mission7:
 		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
 		self.canvas.bind('<Button-1>', self.Joueur1.tir)
-		self.canvas.bind('<Button-3>', self.Joueur1.miner)
+		#self.canvas.bind('<Button-3>', self.Joueur1.miner)
 		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
 		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
 		#Et on lance la boucle
@@ -1479,7 +1495,7 @@ class Mission7:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			#self.canvas.unbind('<Button-3>')
 			root.main = FinHistoire()
 			root.main.afficher()
 			root.main.afficher()
@@ -1490,34 +1506,19 @@ class Mission7:
 		for var in range(len(self.Joueurs)):
 			self.Joueurs[var].mouvement_obus()
 		#Mine:
-		for k in range(len(self.Joueurs)):
-			if self.Joueurs[k].stock_mine == 0:
-				self.Joueurs[k].timer -= 20
-			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
-				self.Joueurs[k].minequiexplose()
-		#IA du boss simple: tir aléatoire...
+##		for k in range(len(self.Joueurs)):
+##			if self.Joueurs[k].stock_mine == 0:
+##				self.Joueurs[k].timer -= 20
+##			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
+##				self.Joueurs[k].minequiexplose()
+		#IA du boss simple: tir aléatoire
 		rdg = random.randrange(0, 100)
-		if rdg <= 57:
+		if rdg <= 60:
 			alpha = random.randrange(0, 628)/100
 			#Tir
 			self.Joueur2.tir(alpha)
-		#...parfois dirigé contre le Joueur
-		elif rdg <= 60:
-			#Trigo et Pythagore
-			adj = self.Joueur1.char_x - self.Joueur2.char_x
-			hypo = math.sqrt((self.Joueur1.char_x - self.Joueur2.char_x)**2
-							 + (self.Joueur1.char_y - self.Joueur2.char_y)**2)
-			if hypo == 0:
-				hypo = 0.01
-			alpha = math.acos(adj/hypo)
-			#Angle obtus ou angle aigus?
-			if self.Joueur1.char_y > self.Joueur2.char_y:
-				alpha = - alpha
-			#Tir
-			self.Joueur2.tir(alpha)
 		#Déplacement des robots + joueur
-		for k in range(len(self.Joueurs)):
-			self.Joueurs[k].mouvement_char()
+		self.Joueur1.mouvement_char()
 		#Il y a-t-il fin de partie?
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
@@ -1879,7 +1880,7 @@ class Coop2:
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
 			self.canvas.unbind('<Button-3>')
-			root.main = Coop1()
+			root.main = Coop3()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -2086,7 +2087,7 @@ class Coop4:
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
 			self.canvas.unbind('<Button-3>')
-			root.main = Coop4()
+			root.main = Coop5()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -2203,7 +2204,7 @@ class Coop5:
 				self.Joueurs[k].minequiexplose()
 		#IA du boss simple: tir aléatoire
 		rdg = random.randrange(0, 100)
-		if rdg <= 70:
+		if rdg <= 60:
 			alpha = random.randrange(0, 628)/100
 			#Tir
 			self.Joueur3.tir(alpha)
@@ -2227,9 +2228,9 @@ class FinCoop:
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission i (obligatoire): Continuer de vous amusez!")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission i (obligatoire): Continuez de vous amuser!")
 		#Affichage de la narration
-		root.display("Félicitation²!" +'\n\n'
+		root.display("Félicitation² !!" +'\n\n'
 		+"Vous avez réussi les 5 niveaux!\n"
 		+"Vous formez un excellent duo!\n\n"
 		+"Appuyez sur Echap pour revenir au Menu.")				
@@ -2238,17 +2239,15 @@ class FinCoop:
 class Bataille():
 	def __init__(self):
 		#Variables globales
-		self.terrain = root.terrain1
+		self.terrain = root.terrain2
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', ('Joueur1', 60, 20, 'White'))
 		self.Joueur2 = Char(self.canvas, 920, 520, 'DodgerBlue', ('Joueur2', 980, 620, 'DarkBlue'))
-		self.Joueur3 = Char(self.canvas, 920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'))
-		self.Joueur4 = Char(self.canvas, 80, 520, 'LimeGreen', ('Ordi', 60, 620, 'DarkGreen'))
 		#On enregistre les Joueurs dans une liste
-		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
+		self.Joueurs = [self.Joueur1, self.Joueur2]
 
 		#Nombre de victoire et de défaites
 		self.score = {"J1":0, "J2":0} 
@@ -2256,12 +2255,29 @@ class Bataille():
 
 	def afficher(self):
 		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		#Affichage de la narration
+		root.display("Joueur1, voici les touches:\n"
+		+"Se déplacer : zqsd/wasd\n"
+		+"Tirer (selon un cercle trigo, g correspondant à -pi/2):\n"
+		+"rty\n"
+		+"fgh\n"
+		+"vbn\n"
+		+"Poser une mine : espace\n"
+		+'\n'#=========================================================#
+		+"Joueur2, voici les touches:\n"
+		+"Se déplacer : Flèches directionnelles\n"
+		+"Tirer : Click gauche (Mais seulement 8 angles possibles...)\n"
+		+"Poser une mine : Click droit\n\n")
+
+	def start(self, event):
+		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#...et les scores
 		printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
-								   text="Victoire(s) J1: "+str(self.score["J1"]))
+								   text="Victoire(s) Joueur 1: "+str(self.score["J1"]))
 		printscore = self.canvas.create_text(500, 620, font="Time_New_Roman 15",
-								   text="Victoire(s) J2: "+str(self.score["J2"]))
+								   text="Victoire(s) Joueur 2: "+str(self.score["J2"]))
 		#Evènements
 		self.fenetre.bind('<KeyPress>', root.change_dir)
 		self.fenetre.bind('<KeyRelease>', root.stop_dir)
@@ -2269,8 +2285,6 @@ class Bataille():
 		self.fenetre.bind('<Button-3>', self.Joueur2.miner)
 		#Et on lance la boucle
 		self.boucle()
-		#On lance le tout
-		self.fenetre.mainloop()
 		
 	def fin2partie(self):
 		#Si le Joueur2 est mort...
@@ -2278,29 +2292,25 @@ class Bataille():
 			#Réinitialisation
 			self.Joueur1.reborn(80, 80)
 			self.Joueur2.reborn(920, 520)
-			self.Joueur3.reborn(920, 80)
-			self.Joueur4.reborn(80, 520)
 			#Score +1
 			self.score["J2"] = self.score["J2"] + 1
 			#Effacement de la surface (ligne du bas)
-			self.canvas.create_rectangle(400, 600, 600, 640, width=0, fill='DarkGoldenRod')
+			self.canvas.create_rectangle(350, 600, 650, 640, width=0, fil='DarkGoldenRod')
 			#Affichage
 			printscore = self.canvas.create_text(500, 620, font="Time_New_Roman 15",
-								   text="Victoire(s) J2: "+str(self.score["J2"]))
+								   text="Victoire(s) Joueur 2: "+str(self.score["J2"]))
 		#...ou si le Joueur2 est mort
 		if (self.Joueur2.mort):
 			#Réinitialisation
 			self.Joueur1.reborn(80, 80)
 			self.Joueur2.reborn(920, 520)
-			self.Joueur3.reborn(920, 80)
-			self.Joueur4.reborn(80, 520)
 			#Score +1
 			self.score["J1"] = self.score["J1"] + 1
 			#Effacement de la surface (ligne du haut)
-			self.canvas.create_rectangle(400, 0, 600, 40, width=0, fill='DarkGoldenRod')
+			self.canvas.create_rectangle(350, 0, 650, 40, width=0, fill='DarkGoldenRod')
 			#Affichage
 			printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
-								   text="Victoire(s) J1: "+str(self.score["J1"]))
+								   text="Victoire(s) Joueur 1: "+str(self.score["J1"]))
 				
 				
 	def boucle(self):
@@ -2315,8 +2325,6 @@ class Bataille():
 			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
 				self.Joueurs[k].minequiexplose()
 		#Déplacement des robots + joueur
-		self.Joueur3.ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
-		self.Joueur4.ia( (self.Joueur2.char_x, self.Joueur2.char_y) )
 		for k in range(len(self.Joueurs)):
 			self.Joueurs[k].mouvement_char()
 		#Il y a-t-il fin de partie?
