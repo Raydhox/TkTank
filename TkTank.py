@@ -1554,7 +1554,10 @@ class FinHistoire:
 		+"Mais que dis-je, je suis déjà parfait, même si j'ai perdu." +'\n'
 		+"Mais j'avais pu être... plus-que-parfait!\n"
 		+"Soit dit en passant: merci d'avoir joué avec moi!\n\n"
-		+"Appuyez sur Echap pour revenir au Menu.")			
+		+"Appuyez sur Echap pour revenir au Menu.")	
+		
+	def start(self):
+		pass		
 									
 """================Fin du mode 'Histoire"================"""
 
@@ -1569,9 +1572,9 @@ class SansFin():
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', ('Joueur', 60, 20, 'White'))
-		self.Joueur2 = Char(self.canvas, 920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'))
-		self.Joueur3 = Char(self.canvas, 80, 520, 'LimeGreen', ('Ordi', 60, 620, 'DarkGreen'))
-		self.Joueur4 = Char(self.canvas, 920, 520, 'DodgerBlue', ('Ordi', 980, 620, 'DarkBlue'))
+		self.Joueur2 = Tank(self.canvas, 920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'), 1)
+		self.Joueur3 = Tank(self.canvas, 80, 520, 'LimeGreen', ('Ordi', 60, 620, 'DarkGreen'), 1)
+		self.Joueur4 = Tank(self.canvas, 920, 520, 'DodgerBlue', ('Ordi', 980, 620, 'DarkBlue'), 1)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
@@ -1581,6 +1584,21 @@ class SansFin():
 
 	def afficher(self):
 		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		#Affichage de la narration
+		root.display("Comment jouer?\n"
+		+"Flèches_directionnelles / zqsd / wasd : se déplacer\n"
+		+"Click gauche : Tirer\n"
+		+"Click droit : Poser une mine\n"
+		+'\n'
+		+"Le mode Sans Fin est un mode... Sans Fin.\n"
+		+"Chaque fois que vous perdez ou gagnez,\n"
+		+"vous recommencez immédiatement.\n"
+		+"Les Ennemis peuvent s'entretuer et possèdent:\n"
+		+"(Nombre de Victoire(s)) PV")
+
+	def start(self, event):
+		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#...et les scores
 		printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
@@ -1588,14 +1606,14 @@ class SansFin():
 		printscore = self.canvas.create_text(500, 620, font="Time_New_Roman 15",
 								   text="Défaite: "+str(self.score["Défaite"]))
 		#Evènements
+		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
 		self.canvas.bind('<Button-1>', self.Joueur1.tir)
 		self.canvas.bind('<Button-3>', self.Joueur1.miner)
 		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
 		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
 		#Et on lance la boucle
-		self.boucle()
-				
+		self.boucle()			
 
 	def fin2partie(self):
 		#Si le joueur est mort...
@@ -1612,6 +1630,9 @@ class SansFin():
 			#Affichage
 			printscore = self.canvas.create_text(500, 620, font="Time_New_Roman 15",
 								   text="Défaite(s): "+str(self.score["Défaite"]))
+			#PV des Ennemis
+			for var in range(1, 3):
+				self.Joueurs[var].pv = self.score["Victoire"]
 		#...ou si tous les ennemis sont morts
 		if (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Réinitialisation
@@ -1626,6 +1647,9 @@ class SansFin():
 			#Affichage
 			printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
 								   text="Victoire(s): "+str(self.score["Victoire"]))
+			#PV des Ennemis
+			for var in range(1, 3):
+				self.Joueurs[var].pv = self.score["Victoire"]
 				
 	def boucle(self):
 		"""===Boucle principale du jeu.==="""
@@ -1765,7 +1789,7 @@ class Coop1:
 		root.display("Le mode coopération (Coop, pour les intimes)\n"
 		+"comprend 5 missions.\n"
 		+"Les ennemis peuvent, dans ce mode, s'entretuer.\n"
-		+"Si l'un des deux Joueur meurt, vous recommencer.\n\n"
+		+"Si l'un des deux joueurs meurt, vous recommencez.\n\n"
 		+"Bonne chance, et amusez-vous bien! ;-)")
 
 	def start(self, event):
@@ -2243,7 +2267,10 @@ class FinCoop:
 		root.display("Félicitation² !!" +'\n\n'
 		+"Vous avez réussi les 5 niveaux!\n"
 		+"Vous formez un excellent duo!\n\n"
-		+"Appuyez sur Echap pour revenir au Menu.")				
+		+"Appuyez sur Echap pour revenir au Menu.")	
+		
+	def start(self):
+		pass			
 """================FinCoopération================"""
 
 class Bataille():
