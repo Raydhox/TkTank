@@ -387,7 +387,6 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 			#Angle obtus ou angle aigus?
 			if cible[1] > self.char_y:
 				alpha = - alpha
-			self.alpha = alpha
 			#Tir
 			self.tir(alpha)
 
@@ -553,7 +552,7 @@ class Main():
 	def __init__(self):
 		#On crée une fenêtre tkinter 'fenetre'
 		self.fenetre = Tk()
-		self.fenetre.title("TkTank")
+		self.fenetre.title("TkT4nk")
 		self.fenetre.geometry("+0+0")
 
 		#On crée un Canvas 'jeu'
@@ -631,6 +630,9 @@ class Main():
 		self.terrain2.append("11111111111111111111111111")
 	
 	def display(self, message, k=0):
+		#On empêche l'accès au Menu pendant 1 seconde.
+		if k == 0:
+			self.fenetre.unbind('<Escape>')
 		#Affiche un rectangle en zoomant pendant 1 seconde...
 		if k != 50:
 			self.box = self.canvas.create_rectangle(520-4*k, 320-3*k, 520+4*k, 320+3*k, width=0, fill='Chocolate')
@@ -709,7 +711,7 @@ class Main():
 		self.quickprint(self.terrain, self.Joueurs)
 		
 		#On affiche le titre
-		self.canvas.create_text(520, 100, font="Comic_Sans_MS 100", fill="DarkGoldenRod", text="TkTank")
+		self.canvas.create_text(520, 100, font="Comic_Sans_MS 100", fill="DarkGoldenRod", text="TkT4nk")
 		#On affiche les modes de jeu disponible
 		#===Défis===
 		self.canvas.create_rectangle(40, 40, 120, 120, width=1)
@@ -738,39 +740,47 @@ class Main():
 		self.fenetre.bind('<Escape>', self.restart)
 		#On lance le jeu
 		self.fenetre.mainloop()
+
+	def noclick(self):
+		#Supprime les interactions de la souris.
+		self.canvas.unbind('<Button-1>')
+		self.canvas.unbind('<Button-3>')	
 		
 	def start(self, event):
 		#Si on clique sur un bouton:
 		#	On supprime le Menu...
 		#	...et on lance le mode de jeu choisis
-		def delMenu():
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')	
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
-				delMenu()
+				self.noclick()
 				self.main = Histoire()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
-				delMenu()
+				self.noclick()
 				self.main = SansFin()
 				self.main.afficher()
 		elif (event.x >= 660) and (event.x <= 900):
 			if (event.y >= 260) and (event.y <= 340):
-				delMenu()
+				self.noclick()
 				self.main = Coop()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
-				delMenu()
+				self.noclick()
 				self.main = Bataille()
 				self.main.afficher()
 	
 	def restart(self, event):
-		#Relance le jeu (et donc, le menu).
+		#Stop le mode de jeu en cours.
 		try:
 			root.main.encore = False
 		except:
 			pass
+		#Supprime les interactions
+		try:
+			self.noclick()
+		except:
+			pass
+		#Affiche le menu
 		root.afficher()
 		
 
@@ -2244,7 +2254,7 @@ class Bataille():
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', ('Joueur1', 60, 20, 'White'))
+		self.Joueur1 = Char(self.canvas, 80, 80, 'Red', ('Joueur1', 60, 20, 'DarkRed'))
 		self.Joueur2 = Char(self.canvas, 920, 520, 'DodgerBlue', ('Joueur2', 980, 620, 'DarkBlue'))
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
@@ -2252,6 +2262,22 @@ class Bataille():
 		#Nombre de victoire et de défaites
 		self.score = {"J1":0, "J2":0} 
 		self.encore = True
+
+	def tirMod8(self, event):
+		#Tir dirigé contre le Joueur
+		#Trigo et Pythagore
+		adj = event.x - self.Joueur2.char_x
+		hypo = math.sqrt((event.x - self.Joueur2.char_x)**2 + (event.y - self.Joueur2.char_y)**2)
+		if hypo == 0:
+			hypo = 0.01
+		alpha = math.acos(adj/hypo)
+		#Angle obtus ou angle aigus?
+		if event.y > self.Joueur2.char_y:
+			alpha = - alpha
+		#On convertit en un "angle modulo 8"
+		alpha = round(alpha*4/math.pi)*math.pi/4
+		#Tir
+		self.Joueur2.tir(alpha)
 
 	def afficher(self):
 		#Affichage du terrain et des chars
@@ -2279,9 +2305,10 @@ class Bataille():
 		printscore = self.canvas.create_text(500, 620, font="Time_New_Roman 15",
 								   text="Victoire(s) Joueur 2: "+str(self.score["J2"]))
 		#Evènements
+		self.fenetre.unbind('<Enter>')
 		self.fenetre.bind('<KeyPress>', root.change_dir)
 		self.fenetre.bind('<KeyRelease>', root.stop_dir)
-		self.fenetre.bind('<Button-1>', self.Joueur2.tir)
+		self.fenetre.bind('<Button-1>', self.tirMod8)
 		self.fenetre.bind('<Button-3>', self.Joueur2.miner)
 		#Et on lance la boucle
 		self.boucle()
