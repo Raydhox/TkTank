@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: Alpha-Béta (Pour que je puisse me repérer).
+#Version: Béta-Alpha (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -724,12 +724,12 @@ class Main():
 		self.canvas.create_rectangle(140, 460, 380, 540, width=4)
 		self.canvas.create_text(260, 500, font="Comic_Sans_MS 40", fill="DarkGoldenRod", text="Sans Fin")
 		#===Duo===
-		#Bataille
+		#Coopération
 		self.canvas.create_rectangle(660, 260, 900, 340, width=4)
 		self.canvas.create_text(780, 300, font="Comic_Sans_MS 40", fill="DarkGoldenRod", text="Coop")
-		#Bataille
+		#Versus
 		self.canvas.create_rectangle(660, 460, 900, 540, width=4)
-		self.canvas.create_text(780, 500, font="Comic_Sans_MS 40", fill="DarkGoldenRod", text="Bataille")
+		self.canvas.create_text(780, 500, font="Comic_Sans_MS 40", fill="DarkGoldenRod", text="Versus")
 		#===Astuce===
 		self.canvas.create_text(520, 620, font="Comic_Sans_MS 10", fill="NavajoWhite",
 								text="Astuce: Vous pouvez à tout moment revenir au Menu en appuyant sur Echap.")
@@ -766,7 +766,7 @@ class Main():
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
-				self.main = Bataille()
+				self.main = Versus()
 				self.main.afficher()
 	
 	def restart(self, event):
@@ -849,8 +849,7 @@ class Histoire:
 		if (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Mission1()
 			root.main.afficher()
 				
@@ -1039,8 +1038,7 @@ class Mission2:
 		if (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Mission3()
 			root.main.afficher()
 				
@@ -1135,8 +1133,7 @@ class Mission3:
 		#Si le joueur meurt...
 		if (self.Joueur1.mort):
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Mission4()
 			root.main.afficher()
 		#C'est une boucle, donc c'est re-ti-par!
@@ -1221,8 +1218,7 @@ class Mission4:
 		if (self.Joueur1.char_x >= 920) and (self.Joueur1.char_y >= 520):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Mission5()
 			root.main.afficher()
 				
@@ -1332,8 +1328,7 @@ class Mission5:
 		if (self.Joueur4.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Mission6()
 			root.main.afficher()
 				
@@ -1421,7 +1416,7 @@ class Mission6:
 				cryptero = cryptero + chr( ord(code[k]) +1)
 			return cryptero
 		#Si on trouve le mot de passe
-		if ( divulgacher(self.password) == "UlUbol}" ):
+		if ( divulgacher(self.password) == "UlU5ol}" ):
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.main = Mission7()
@@ -1485,7 +1480,6 @@ class Mission7:
 		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
 		self.canvas.bind('<Button-1>', self.Joueur1.tir)
-		#self.canvas.bind('<Button-3>', self.Joueur1.miner)
 		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
 		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
 		#Et on lance la boucle
@@ -1505,7 +1499,6 @@ class Mission7:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
-			#self.canvas.unbind('<Button-3>')
 			root.main = FinHistoire()
 			root.main.afficher()
 			root.main.afficher()
@@ -1738,8 +1731,7 @@ class Coop:
 		if (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Coop1()
 			root.main.afficher()
 				
@@ -1821,8 +1813,7 @@ class Coop1:
 		if (self.Joueur3.mort) and (self.Joueur4.mort) and (self.Joueur5.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Coop2()
 			root.main.afficher()
 				
@@ -1913,8 +1904,7 @@ class Coop2:
 		if (self.Joueur3.mort) and (self.Joueur4.mort) and (self.Joueur5.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Coop3()
 			root.main.afficher()
 				
@@ -2012,8 +2002,7 @@ class Coop3:
 		and (self.Joueur2.char_x >= 920) and (self.Joueur2.char_y >= 520):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Coop4()
 			root.main.afficher()
 				
@@ -2120,8 +2109,7 @@ class Coop4:
 		and (self.Joueur2.char_x >= 920) and (self.Joueur2.char_y >= 520):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = Coop5()
 			root.main.afficher()
 				
@@ -2221,8 +2209,7 @@ class Coop5:
 		if (self.Joueur3.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			self.canvas.unbind('<Button-1>')
-			self.canvas.unbind('<Button-3>')
+			root.noclick()
 			root.main = FinCoop()
 			root.main.afficher()
 				
@@ -2274,7 +2261,7 @@ class FinCoop:
 		pass			
 """================FinCoopération================"""
 
-class Bataille():
+class Versus():
 	def __init__(self):
 		#Variables globales
 		self.terrain = root.terrain2
@@ -2391,14 +2378,3 @@ class Bataille():
 #On lance le jeu
 root = Main()
 root.afficher()
-
-
-
-
-
-
-
-
-
-
-
