@@ -1595,7 +1595,8 @@ class SansFin():
 		+"Chaque fois que vous perdez ou gagnez,\n"
 		+"vous recommencez immédiatement.\n"
 		+"Les Ennemis peuvent s'entretuer et possèdent:\n"
-		+"(Nombre de Victoire(s)) PV")
+		+"(Nombre de Victoire(s)) PV\n\n"
+		+"Appuez sur Entrée pour commencer")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
