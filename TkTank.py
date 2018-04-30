@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: Béta-Alpha (Pour que je puisse me repérer).
+#Version: Béta (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -668,24 +668,25 @@ class Main():
 			self.main.Joueur2.change_dir(event)
 
 		#Tir du Joueur1
-		if (event.keysym.lower() == 'h'):
-			self.main.Joueur1.tir(0)
-		elif (event.keysym.lower() == 'y'):
-			self.main.Joueur1.tir(3.14/4)
-		elif (event.keysym.lower() == 't'):
-			self.main.Joueur1.tir(3.14/2)
-		elif (event.keysym.lower() == 'r'):
-			self.main.Joueur1.tir(3*3.14/4)
-		elif (event.keysym.lower() == 'f'):
-			self.main.Joueur1.tir(3.14)
-		elif (event.keysym.lower() == 'v'):
-			self.main.Joueur1.tir(-3*3.14/4)
-		elif (event.keysym.lower() == 'b') or (event.keysym.lower() == 'g'):
-			self.main.Joueur1.tir(-3.14/2)
-		elif (event.keysym.lower() == 'n'):
-			self.main.Joueur1.tir(-3.14/4)
-		elif (event.keysym == "space"):
-			self.main.Joueur1.miner({})
+		if root.main.encore:
+			if (event.keysym.lower() == 'h'):
+				self.main.Joueur1.tir(0)
+			elif (event.keysym.lower() == 'y'):
+				self.main.Joueur1.tir(3.14/4)
+			elif (event.keysym.lower() == 't'):
+				self.main.Joueur1.tir(3.14/2)
+			elif (event.keysym.lower() == 'r'):
+				self.main.Joueur1.tir(3*3.14/4)
+			elif (event.keysym.lower() == 'f'):
+				self.main.Joueur1.tir(3.14)
+			elif (event.keysym.lower() == 'v'):
+				self.main.Joueur1.tir(-3*3.14/4)
+			elif (event.keysym.lower() == 'b') or (event.keysym.lower() == 'g'):
+				self.main.Joueur1.tir(-3.14/2)
+			elif (event.keysym.lower() == 'n'):
+				self.main.Joueur1.tir(-3.14/4)
+			elif (event.keysym == "space"):
+				self.main.Joueur1.miner({})
 	
 	def stop_dir(self, event):
 		#Désactive la direction du Joueur1
@@ -1564,9 +1565,9 @@ class SansFin():
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', ('Joueur', 60, 20, 'White'))
-		self.Joueur2 = Tank(self.canvas, 920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'), 1)
-		self.Joueur3 = Tank(self.canvas, 80, 520, 'LimeGreen', ('Ordi', 60, 620, 'DarkGreen'), 1)
+		self.Joueur1 = Char(self.canvas, 80, 520, 'Yellow', ('Joueur', 980, 20, 'White'))
+		self.Joueur2 = Tank(self.canvas, 80, 80, 'Red', ('0rdi', 60, 20, 'DarkRed'), 1)
+		self.Joueur3 = Tank(self.canvas, 920, 80, 'LimeGreen', ('Ordi', 980, 620, 'DarkGreen'), 1)
 		self.Joueur4 = Tank(self.canvas, 920, 520, 'DodgerBlue', ('Ordi', 980, 620, 'DarkBlue'), 1)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
@@ -1613,9 +1614,9 @@ class SansFin():
 		#Si le joueur est mort...
 		if (self.Joueur1.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(920, 80)
-			self.Joueur3.reborn(80, 520)
+			self.Joueur1.reborn(80, 520)
+			self.Joueur2.reborn(80, 80)
+			self.Joueur3.reborn(920, 80)
 			self.Joueur4.reborn(920, 520)
 			#Score défaite +1
 			self.score["Défaite"] = self.score["Défaite"] + 1
@@ -1630,9 +1631,9 @@ class SansFin():
 		#...ou si tous les ennemis sont morts
 		if (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(920, 80)
-			self.Joueur3.reborn(80, 520)
+			self.Joueur1.reborn(80, 520)
+			self.Joueur2.reborn(80, 80)
+			self.Joueur3.reborn(920, 80)
 			self.Joueur4.reborn(920, 520)
 			#Score défaite +1
 			self.score["Victoire"] = self.score["Victoire"] + 1
@@ -1677,10 +1678,10 @@ class Coop:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
-		self.Joueur2 = Char(self.canvas, 80, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))
-		self.Joueur3 = Char(self.canvas, 920, 80, 'LimeGreen', ('Ennemi', 980, 20, 'DarkGreen'))
-		self.Joueur4 = Char(self.canvas, 920, 520, 'Yellow', ('Ennemi', 980, 620, 'White'))
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
+		self.Joueur3 = Char(self.canvas, 80, 80, 'LimeGreen', ('Ennemi', 60, 20, 'DarkGreen'))
+		self.Joueur4 = Char(self.canvas, 80, 520, 'Yellow', ('Ennemi', 60, 620, 'White'))
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
@@ -1723,10 +1724,10 @@ class Coop:
 		#Si le joueur est mort...
 		if (self.Joueur1.mort) or (self.Joueur2.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(920, 80)
-			self.Joueur3.reborn(80, 520)
-			self.Joueur4.reborn(920, 520)
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(920, 520)
+			self.Joueur3.reborn(80, 80)
+			self.Joueur4.reborn(80, 520)
 		#...ou si tous les ennemis sont morts
 		if (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Mission accomplie: au suivant!
@@ -1780,7 +1781,7 @@ class Coop1:
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("Le mode coopération (Coop, pour les intimes)\n"
-		+"comprend 5 missions.\n"
+		+"comprend 6 missions.\n"
 		+"Les ennemis peuvent, dans ce mode, s'entretuer.\n"
 		+"Si l'un des deux joueurs meurt, vous recommencez.\n\n"
 		+"Bonne chance, et amusez-vous bien! ;-)")
@@ -1789,7 +1790,7 @@ class Coop1:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 1/5: Décimer l'ennemi.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 1/6: Décimer l'ennemi.")
 		#Evènements
 		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur2.mouvement_canon)
@@ -1804,10 +1805,10 @@ class Coop1:
 		#Si le joueur est mort...
 		if (self.Joueur1.mort) or (self.Joueur2.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(80, 520)
-			self.Joueur3.reborn(920, 80)
-			self.Joueur4.reborn(480, 320)
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(920, 520)
+			self.Joueur3.reborn(80, 80)
+			self.Joueur4.reborn(80, 520)
 			self.Joueur5.reborn(920, 520)
 		#...ou si tous les ennemis sont morts
 		if (self.Joueur3.mort) and (self.Joueur4.mort) and (self.Joueur5.mort):
@@ -1856,10 +1857,10 @@ class Coop2:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
-		self.Joueur2 = Char(self.canvas, 80, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))		
-		self.Joueur3 = Tank(self.canvas, 920, 80, 'LimeGreen', ('Colonel (a 10 PV)', 920, 20, 'DarkGreen'), 10)
-		self.Joueur4 = Tank(self.canvas, 480, 280, 'Yellow', ('Colonel (a 10 PV)', 520, 620, 'White'), 10)
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
+		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Colonel  (a 10 PV)', 60, 20, 'DarkGreen'), 10)
+		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Colonel  (a 10 PV)', 60, 620, 'White'), 10)
 		self.Joueur5 = Tank(self.canvas, 920, 520, 'Green', ('Colonel  (a 10 PV)', 920, 620, 'DarkGreen'), 10)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
@@ -1878,7 +1879,7 @@ class Coop2:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 2/5: Décimer l'ennemi.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 2/6: Décimer l'ennemi.")
 		#Evènements
 		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur2.mouvement_canon)
@@ -1893,10 +1894,10 @@ class Coop2:
 		#Si le joueur est mort...
 		if (self.Joueur1.mort) or (self.Joueur2.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(80, 520)
-			self.Joueur3.reborn(920, 80)
-			self.Joueur4.reborn(480, 320)
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(920, 520)
+			self.Joueur3.reborn(80, 80)
+			self.Joueur4.reborn(80, 520)
 			self.Joueur5.reborn(920, 520)
 			for k in range(2, 5):
 				self.Joueurs[k].pv = 10
@@ -1947,10 +1948,10 @@ class Coop3:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
-		self.Joueur2 = Char(self.canvas, 80, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))		
-		self.Joueur3 = Tank(self.canvas, 920, 80, 'LimeGreen', ('Clone (a 60 PV)', 920, 20, 'DarkGreen'), 60)
-		self.Joueur4 = Tank(self.canvas, 480, 280, 'Yellow', ('Boss (a 60 PV)', 520, 620, 'White'), 60)
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
+		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Clone  (a 10 PV)', 60, 20, 'DarkGreen'), 60)
+		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Boss  (a 60 PV)', 60, 620, 'White'), 60)
 		self.Joueur5 = Tank(self.canvas, 920, 520, 'Green', ('Clone  (a 60 PV)', 920, 620, 'DarkGreen'), 60)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
@@ -1972,7 +1973,7 @@ class Coop3:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 3/5: Prendre.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 3/6: Prendre.")
 		#Affichage des à atteindre
 		self.canvas.create_text(960, 550, font="Time_New_Roman 100", fill="red", text="x")
 		self.canvas.create_text(960, 70, font="Time_New_Roman 100", fill="blue", text="x")
@@ -1990,10 +1991,10 @@ class Coop3:
 		#Si le joueur est mort...
 		if (self.Joueur1.mort) or (self.Joueur2.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(80, 520)
-			self.Joueur3.reborn(920, 80)
-			self.Joueur4.reborn(480, 280)
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(920, 520)
+			self.Joueur3.reborn(80, 80)
+			self.Joueur4.reborn(80, 520)
 			self.Joueur5.reborn(920, 520)
 			for k in range(2, 5):
 				self.Joueurs[k].pv = 60
@@ -2045,10 +2046,10 @@ class Coop4:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
-		self.Joueur2 = Char(self.canvas, 80, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))		
-		self.Joueur3 = Tank(self.canvas, 920, 80, 'LimeGreen', ('Colonel (a 10 PV)', 920, 20, 'DarkGreen'), 10)
-		self.Joueur4 = Tank(self.canvas, 920, 520, 'Yellow', ('Colonel (a 10 PV)', 920, 620, 'White'), 10)
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
+		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Colonel  (a 10 PV)', 60, 20, 'DarkGreen'), 10)
+		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Colonel  (a 10 PV)', 60, 620, 'White'), 10)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
@@ -2070,7 +2071,7 @@ class Coop4:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 4/5: Prendre en 30 secondes.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 4/6: Prendre en 30 secondes.")
 		#Affichage des à atteindre
 		self.canvas.create_text(960, 550, font="Time_New_Roman 100", fill="red", text="x")
 		self.canvas.create_text(960, 70, font="Time_New_Roman 100", fill="blue", text="x")
@@ -2091,10 +2092,10 @@ class Coop4:
 		#Si le joueur est mort...
 		if (self.Joueur1.mort) or (self.Joueur2.mort) or (self.temps <= 0):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(80, 520)
-			self.Joueur3.reborn(920, 80)
-			self.Joueur4.reborn(920, 520)
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(920, 520)
+			self.Joueur3.reborn(80, 80)
+			self.Joueur4.reborn(80, 520)
 			for k in range(2, 4):
 				self.Joueurs[k].pv = 10
 			self.temps = 30
@@ -2152,8 +2153,139 @@ class Coop4:
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
 			self.fenetre.after(20, self.boucle)		
-			
+
 class Coop5:
+	
+	def __init__(self):
+		#Variables globales
+		self.terrain = root.terrain2
+		self.fenetre = root.fenetre
+		self.canvas = root.canvas
+		
+		#On crée les chars
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 960, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 960, 620, 'DarkRed'))		
+		self.Joueur3 = Boss2(self.canvas, 80, 300, 'LimeGreen', ('', 920, 20, 'DarkGreen'), 81 )
+		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3]
+
+		#Pour la boucle
+		self.encore = True
+		
+	"""Gestion des touches spécifiques en multi local."""
+	def spe_tir(self, event):
+		#Les 2 joueurs tirent
+		self.Joueur1.tir(event)
+		self.Joueur2.tir(event)
+	
+	def spe_mine(self, event):
+		#Les 2 joueurs posent une mine
+		self.Joueur1.miner(event)
+		self.Joueur2.miner(event)
+	
+	def spe_canon(self, event):
+		#Les 2 joueurs bougent leurs canons
+		self.Joueur1.mouvement_canon(event)
+		self.Joueur2.mouvement_canon(event)
+			
+	def change_dir(self, event):
+		#Active la direction du Joueur1
+		if (event.keysym.lower() in ['z', 'q', 's', 'd', 'w', 'a']):
+			self.Joueur1.change_dir(event)
+			self.Joueur2.change_dir(event)
+		#Active la direction du Joueur2
+		if (event.keysym in ['Up', 'Left', 'Down', 'Right']):
+			self.Joueur2.change_dir(event)
+
+		#Tir du Joueur1
+		if (event.keysym.lower() in ['r', 't', 'y', 'f', 'g', 'h', 'v', 'b', 'n', 'space']):
+			root.change_dir(event)
+	
+	def stop_dir(self, event):
+		#Désactive la direction du Joueur1
+		if (event.keysym.lower() in ['z', 'q', 's', 'd', 'w', 'a']):
+			self.Joueur1.stop_dir(event)
+			self.Joueur2.stop_dir(event)
+		#Désactive la direction du Joueur2
+		if (event.keysym in ['Up', 'Left', 'Down', 'Right']):
+			self.Joueur2.stop_dir(event)
+		"""Fin(gestion des touches spécifiques en multi local)."""
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		#Affichage de la narration
+		root.display("La pénultième mission: 2 VS 1\n"
+		+"ATTENTION!: Quand le Joueur1 se déplace,\n"
+		+"le Joueur2 aussi. Quand le Joueur2 tir ou pose une mine\n"
+		+"le Joueur1 fait de même.\n\n"
+		+"Appuyez sur Entrée pour commencer.")
+
+	def start(self, event):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, self.Joueurs)
+		#Affichage de l'objectif du chapitre
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 5/6: Vaincre le boss.")
+		#Affichage des pv du bos
+		self.Joueur3.pv = 100
+		self.Joueur3.rip()
+		#Evènements
+		self.fenetre.unbind('<Return>')
+		self.canvas.bind('<Motion>', self.spe_canon)
+		self.canvas.bind('<Button-1>', self.spe_tir)
+		self.canvas.bind('<Button-3>', self.spe_mine)
+		self.fenetre.bind('<KeyPress>', self.change_dir)
+		self.fenetre.bind('<KeyRelease>', self.stop_dir)
+		#Et on lance la boucle
+		self.boucle()
+			
+	def fin2partie(self):
+		#Si le joueur est mort...
+		if (self.Joueur1.mort) or (self.Joueur2.mort):
+			#Réinitialisation
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(920, 520)
+			self.Joueur3.reborn(80, 300)
+			#Affichage des pv du bos
+			self.Joueur3.pv = 81
+			self.Joueur3.rip()
+		#...ou si tous les ennemis sont morts
+		if (self.Joueur3.mort):
+			#Mission accomplie: au suivant!
+			self.encore = False
+			root.noclick()
+			root.main = FinCoop()
+			root.main.afficher()
+				
+	def boucle(self):
+		"""===Boucle principale du jeu.==="""
+		#Mouvement des obus
+		for var in range(len(self.Joueurs)):
+			self.Joueurs[var].mouvement_obus()
+		#Mine:
+		for k in range(len(self.Joueurs)):
+			if self.Joueurs[k].stock_mine == 0:
+				self.Joueurs[k].timer -= 20
+			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
+				self.Joueurs[k].minequiexplose()
+		#IA du boss
+		dist1 = math.sqrt( (self.Joueur1.char_x - self.Joueur3.char_x)**2 
+				+ (self.Joueur1.char_y - self.Joueur3.char_y)**2 )
+		dist2 = math.sqrt( (self.Joueur2.char_x - self.Joueur3.char_x)**2 
+				+ (self.Joueur2.char_y - self.Joueur3.char_y)**2 )
+		if dist1 < dist2:
+			self.Joueur3.ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
+		else:
+			self.Joueur3.ia( (self.Joueur2.char_x, self.Joueur2.char_y) )
+		#Déplacement des robots + joueur
+		for k in range(len(self.Joueurs)):
+			self.Joueurs[k].mouvement_char()
+		#Il y a-t-il fin de partie?
+		self.fin2partie()
+		#C'est une boucle, donc c'est re-ti-par!
+		if self.encore:
+			self.fenetre.after(20, self.boucle)	
+		
+class Coop6:
 	
 	def __init__(self):
 		#Variables globales
@@ -2162,8 +2294,8 @@ class Coop5:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
-		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))		
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 80, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))		
 		self.Joueur3 = Boss2(self.canvas, 500, 300, 'LimeGreen', ('', 920, 20, 'DarkGreen'), 99 )
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3]
 
@@ -2174,14 +2306,15 @@ class Coop5:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Dernière mission... ça va être cocasse!\n\n"
+		root.display("Dernière mission... ça va être cocasse!\n"
+		+"ATTENTION!: le Joueur1 est à droite et le Joueur2, à gauche.\n\n"
 		+"Appuyez sur Entrée pour commencer.")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 5/5=1: Vaincre le boss.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 6/6=1: Vaincre le boss.")
 		#Affichage des pv du bos
 		self.Joueur3.pv = 100
 		self.Joueur3.rip()
@@ -2199,8 +2332,8 @@ class Coop5:
 		#Si le joueur est mort...
 		if (self.Joueur1.mort) or (self.Joueur2.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(920, 520)
+			self.Joueur1.reborn(920, 80)
+			self.Joueur2.reborn(80, 520)
 			self.Joueur3.reborn(500, 300)
 			#Affichage des pv du bos
 			self.Joueur3.pv = 100
@@ -2269,8 +2402,8 @@ class Versus():
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'Red', ('Joueur1', 60, 20, 'DarkRed'))
-		self.Joueur2 = Char(self.canvas, 920, 520, 'DodgerBlue', ('Joueur2', 980, 620, 'DarkBlue'))
+		self.Joueur1 = Char(self.canvas, 920, 520, 'Red', ('Joueur1', 980, 620, 'DarkRed'))
+		self.Joueur2 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur2', 60, 20, 'DarkBlue'))
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
@@ -2323,8 +2456,8 @@ class Versus():
 		self.fenetre.unbind('<Enter>')
 		self.fenetre.bind('<KeyPress>', root.change_dir)
 		self.fenetre.bind('<KeyRelease>', root.stop_dir)
-		self.fenetre.bind('<Button-1>', self.tirMod8)
-		self.fenetre.bind('<Button-3>', self.Joueur2.miner)
+		self.canvas.bind('<Button-1>', self.tirMod8)
+		self.canvas.bind('<Button-3>', self.Joueur2.miner)
 		#Et on lance la boucle
 		self.boucle()
 		
@@ -2332,8 +2465,8 @@ class Versus():
 		#Si le Joueur2 est mort...
 		if (self.Joueur1.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(920, 520)
+			self.Joueur1.reborn(920, 520)
+			self.Joueur2.reborn(80, 80)
 			#Score +1
 			self.score["J2"] = self.score["J2"] + 1
 			#Effacement de la surface (ligne du bas)
@@ -2344,8 +2477,8 @@ class Versus():
 		#...ou si le Joueur2 est mort
 		if (self.Joueur2.mort):
 			#Réinitialisation
-			self.Joueur1.reborn(80, 80)
-			self.Joueur2.reborn(920, 520)
+			self.Joueur1.reborn(920, 520)
+			self.Joueur2.reborn(80, 80)
 			#Score +1
 			self.score["J1"] = self.score["J1"] + 1
 			#Effacement de la surface (ligne du haut)
@@ -2378,3 +2511,14 @@ class Versus():
 #On lance le jeu
 root = Main()
 root.afficher()
+
+
+
+
+
+
+
+
+
+
+
