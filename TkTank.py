@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: Béta (Pour que je puisse me repérer).
+#Version: Béta-Béta (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
