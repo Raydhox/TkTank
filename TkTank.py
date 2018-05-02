@@ -1765,11 +1765,11 @@ class Coop1:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'DodgerBlue', ('Joueur1', 60, 20, 'DarkBlue'))
-		self.Joueur2 = Char(self.canvas, 80, 520, 'Red', ('Joueur2', 60, 620, 'DarkRed'))
-		self.Joueur3 = Char(self.canvas, 920, 80, 'LimeGreen', ('Ennemi', 980, 20, 'DarkGreen'))
-		self.Joueur4 = Char(self.canvas, 480, 280, 'Yellow', ('Ennemi', 520, 620, 'White'))
-		self.Joueur5 = Char(self.canvas, 920, 520, 'Green', ('Ennemi', 980, 620, 'DarkGreen'))
+		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
+		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
+		self.Joueur3 = Char(self.canvas, 80, 80, 'LimeGreen', ('Ennemi', 60, 20, 'DarkGreen'))
+		self.Joueur4 = Char(self.canvas, 80, 520, 'Yellow', ('Ennemi', 60, 620, 'White'))
+		self.Joueur5 = Char(self.canvas, 500, 300, 'Green', ('Ennemi', 500, 620, 'DarkGreen'))
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
 
@@ -1809,7 +1809,7 @@ class Coop1:
 			self.Joueur2.reborn(920, 520)
 			self.Joueur3.reborn(80, 80)
 			self.Joueur4.reborn(80, 520)
-			self.Joueur5.reborn(920, 520)
+			self.Joueur5.reborn(500, 300)
 		#...ou si tous les ennemis sont morts
 		if (self.Joueur3.mort) and (self.Joueur4.mort) and (self.Joueur5.mort):
 			#Mission accomplie: au suivant!
@@ -1861,7 +1861,7 @@ class Coop2:
 		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
 		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Colonel  (a 10 PV)', 60, 20, 'DarkGreen'), 10)
 		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Colonel  (a 10 PV)', 60, 620, 'White'), 10)
-		self.Joueur5 = Tank(self.canvas, 920, 520, 'Green', ('Colonel  (a 10 PV)', 920, 620, 'DarkGreen'), 10)
+		self.Joueur5 = Tank(self.canvas, 500, 300, 'Green', ('Colonel  (a 10 PV)', 500, 620, 'DarkGreen'), 10)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
 
@@ -1898,7 +1898,7 @@ class Coop2:
 			self.Joueur2.reborn(920, 520)
 			self.Joueur3.reborn(80, 80)
 			self.Joueur4.reborn(80, 520)
-			self.Joueur5.reborn(920, 520)
+			self.Joueur5.reborn(500, 300)
 			for k in range(2, 5):
 				self.Joueurs[k].pv = 10
 		#...ou si tous les ennemis sont morts
@@ -1952,7 +1952,7 @@ class Coop3:
 		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
 		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Clone  (a 10 PV)', 60, 20, 'DarkGreen'), 60)
 		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Boss  (a 60 PV)', 60, 620, 'White'), 60)
-		self.Joueur5 = Tank(self.canvas, 920, 520, 'Green', ('Clone  (a 60 PV)', 920, 620, 'DarkGreen'), 60)
+		self.Joueur5 = Tank(self.canvas, 500, 300, 'Green', ('Clone  (a 60 PV)', 920, 620, 'DarkGreen'), 60)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
 
@@ -1995,7 +1995,7 @@ class Coop3:
 			self.Joueur2.reborn(920, 520)
 			self.Joueur3.reborn(80, 80)
 			self.Joueur4.reborn(80, 520)
-			self.Joueur5.reborn(920, 520)
+			self.Joueur5.reborn(500, 300)
 			for k in range(2, 5):
 				self.Joueurs[k].pv = 60
 		#...ou si la mission est accomplie
