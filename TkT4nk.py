@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: Béta-Béta (Pour que je puisse me repérer).
+#Version: Gamma-Béta (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -269,7 +269,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 			self.mine_x = self.char_x + 20 + 32*math.sin(self.alpha+math.pi*1.5)
 			self.mine_y = self.char_y + 20 + 32*math.cos(self.alpha+math.pi*1.5)
 			self.mine = self.canvas.create_oval(self.mine_x-12, self.mine_y-12, self.mine_x+12,
-											 self.mine_y+12, width=7, fill='GoldenRod')
+											 self.mine_y+12, width=7, fill=self.couleur)
 			#Pour éviter de mettre plusieurs mines
 			self.stock_mine = 0
 
@@ -493,7 +493,7 @@ class Ennemi(Tank):
 				and (self.munition[k]['obus_y'] <= Joueurs[var].char_y+40):
 					obus_del.append(k)
 					#Les balles ennemis ne tuent que le Joueur
-					if (var == 0):
+					if (Joueurs[var].couleur == "Yellow") or (Joueurs[var].couleur == "Orange"):
 						Joueurs[var].rip()
 		#Les obus arretées sont supprimées
 		for k in obus_del:
@@ -754,7 +754,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire()
+				self.main = Mission8()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -1420,7 +1420,7 @@ class Mission6:
 		if ( divulgacher(self.password) == "UlU5ol}" ):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			root.main = Mission7()
+			root.main = Mission10()
 			root.main.afficher()
 		else:
 			#Coup dur; on recommence
@@ -1438,7 +1438,7 @@ class Mission6:
 			#C'est une boucle, donc c'est re-ti-par!
 			self.fenetre.after(20, self.boucle)		
 			
-class Mission7:
+class Mission10:
 	
 	def __init__(self):
 		#Variables globales
@@ -1473,7 +1473,7 @@ class Mission7:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 5: Vaincre le boss.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 7: Vaincre le boss.")
 		#Affichage des pv du bos
 		self.Joueur2.pv = 81
 		self.Joueur2.rip()
@@ -1509,15 +1509,8 @@ class Mission7:
 		#Mouvement des obus
 		for var in range(len(self.Joueurs)):
 			self.Joueurs[var].mouvement_obus()
-		#Mine:
-##		for k in range(len(self.Joueurs)):
-##			if self.Joueurs[k].stock_mine == 0:
-##				self.Joueurs[k].timer -= 20
-##			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
-##				self.Joueurs[k].minequiexplose()
-		#IA du boss simple: tir aléatoire
-		rdg = random.randrange(0, 100)
-		if rdg <= 60:
+		rdg = random.randrange(0, 10)
+		if rdg <= 6:
 			alpha = random.randrange(0, 628)/100
 			#Tir
 			self.Joueur2.tir(alpha)
@@ -1552,6 +1545,206 @@ class FinHistoire:
 		
 	def start(self):
 		pass		
+
+#==========Fin alternatif: mode difficile==========
+class Mission7:
+	
+	def __init__(self):
+		#Variables globales
+		self.terrain = root.terrain0
+		self.fenetre = root.fenetre
+		self.canvas = root.canvas
+		
+		#On crée les chars
+		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
+		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'DarkSlateGray', ('TkTank (bogué)', 920, 620, 'DarkBlue'), 999)
+		#On enregistre les Joueurs dans une liste
+		self.Joueurs = [self.Joueur1, self.Joueur2]
+
+		#Pour la boucle
+		self.encore = True
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		#Affichage de la narration
+		root.display("Fin: " +root.nom +'\n\n'
+		+"Mon mot de passe... Impossible à trouver..." +'\n'
+		+"EXTERMINER!!!!!" +'\n'
+		+"Mais... Mais... Je n'arrive plus à bouger..." +'\n'
+		+"Ai-je fait une erreur de manipulation?" +'\n'
+		+"Pendant l'installation du pare-feu?  Impossible." +'\n'
+		+"Je suis un être parfait. Parfaitement." +'\n'
+		+"Je me conterai de tirer. EXTERMINER!!!!!" +'\n\n'
+		+"Appuyez sur Entrée pour commencer.")
+
+	def start(self, event):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, self.Joueurs)
+		#Affichage de l'objectif du chapitre
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 7: Prendre.")
+		#Affichage de la zone à atteindre
+		self.canvas.create_text(960, 550, font="Time_New_Roman 100", fill="red", text="x")
+		#Evènements
+		self.fenetre.unbind('<Return>')
+		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
+		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
+		#Et on lance la boucle
+		self.boucle()
+	
+	def fin2partie(self):
+		#Si le joueur est mort
+		if (self.Joueur1.mort):
+			#Réinitialisation
+			self.Joueur1.reborn(80, 80)
+			self.Joueur2.reborn(500, 300)
+		#...ou si on a réussi à atteindre la zone
+		if (self.Joueur1.char_x >= 920) and (self.Joueur1.char_y >= 520):
+			#Mission accomplie: au suivant!
+			self.encore = False
+			root.noclick()
+			root.main = Mission8()
+			root.main.afficher()
+				
+	def boucle(self):
+		"""===Boucle principale du jeu.==="""
+		#Mouvement des obus
+		self.Joueur2.mouvement_obus()
+		rdg = random.randrange(0, 10)
+		if rdg <= 4:
+			alpha = random.randrange(0, 628)/100
+			#Tir
+			self.Joueur2.tir(alpha)
+		#Déplacement des robots + joueur
+		self.Joueur1.mouvement_char()
+		#Il y a-t-il fin de partie?
+		self.fin2partie()
+		#C'est une boucle, donc c'est re-ti-par!
+		if self.encore:
+			self.fenetre.after(20, self.boucle)
+
+class Mission8:
+	
+	def __init__(self):
+		#Variables globales
+		self.terrain = root.terrain2
+		self.fenetre = root.fenetre
+		self.canvas = root.canvas
+		
+		#On crée les chars		
+		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
+		self.Joueur2 = Char(self.canvas, 80, 520, 'Orange', ('Miroir', 60, 620, 'White'))		
+		self.Joueur3 = Boss(self.canvas, 920, 80, 'Red', ('Boss (a 60 PV)', 920, 20, 'DarkRed'), 60 )
+		self.Joueur4 = Boss(self.canvas, 920, 520, 'DodgerBlue', ('Clone (a 60 PV)', 920, 620, 'DarkBlue'), 60 )
+		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
+
+		#Pour la boucle
+		self.encore = True
+		
+	"""Gestion des touches spécifiques à cette mission."""
+	def spe_tir(self, event):
+		#Les 2 joueurs tirent
+		self.Joueur1.tir(event)
+		self.Joueur2.tir(event)
+	
+	def spe_mine(self, event):
+		#Les 2 joueurs posent une mine
+		self.Joueur1.miner(event)
+		self.Joueur2.miner(event)
+	
+	def spe_canon(self, event):
+		#Les 2 joueurs bougent leurs canons
+		self.Joueur1.mouvement_canon(event)
+		self.Joueur2.mouvement_canon(event)
+		
+	def change_dir(self, event):
+		#Les 2 joueurs posent une mine
+		self.Joueur1.change_dir(event)
+		self.Joueur2.change_dir(event)
+	
+	def stop_dir(self, event):
+		#Les 2 joueurs bougent leurs canons
+		self.Joueur1.stop_dir(event)
+		self.Joueur2.stop_dir(event)
+	"""Fin(gestion des touches spécifiques à cette mission)."""
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		#Affichage de la narration
+		root.display("La pénultième mission:\n"
+		+"Quand le Joueur1 se déplace,\n"
+		+"le Joueur2 aussi. Quand le Joueur2 tir ou pose une mine\n"
+		+"le Joueur1 fait de même.\n\n"
+		+"Appuyez sur Entrée pour commencer.")
+
+	def start(self, event):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, self.Joueurs)
+		#Affichage de l'objectif du chapitre
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 8: Décimer l'ennemi.")
+		#Evènements
+		self.fenetre.unbind('<Return>')
+		self.canvas.bind('<Motion>', self.spe_canon)
+		self.canvas.bind('<Button-1>', self.spe_tir)
+		self.canvas.bind('<Button-3>', self.spe_mine)
+		self.fenetre.bind('<KeyPress>', self.change_dir)
+		self.fenetre.bind('<KeyRelease>', self.stop_dir)
+		#Et on lance la boucle
+		self.boucle()
+			
+	def fin2partie(self):
+		#Si le joueur est mort...
+		if (self.Joueur1.mort) or (self.Joueur2.mort):
+			#Réinitialisation
+			self.Joueur1.reborn(80, 80)
+			self.Joueur2.reborn(80, 520)
+			self.Joueur3.reborn(920, 80)
+			self.Joueur4.reborn(920, 520)
+			#PV
+			self.Joueur3.pv = 60
+			self.Joueur4.pv = 60
+			#Rectangle où sont afficher les PV
+			self.canvas.create_rectangle(400, 600, 600, 640, width=0, fill='DarkGoldenRod')
+		#...ou si tous les ennemis sont morts
+		if (self.Joueur3.mort) and (self.Joueur4.mort):
+			#Mission accomplie: au suivant!
+			self.encore = False
+			self.canvas.unbind('<Button-1>')
+			self.canvas.unbind('<Button-3>')
+			root.main = FinMission()
+			root.main.afficher()
+				
+	def boucle(self):
+		"""===Boucle principale du jeu.==="""
+		#Mouvement des obus
+		for var in range(len(self.Joueurs)):
+			self.Joueurs[var].mouvement_obus()
+		#Mine:
+		for k in range(len(self.Joueurs)):
+			if self.Joueurs[k].stock_mine == 0:
+				self.Joueurs[k].timer -= 20
+			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
+				self.Joueurs[k].minequiexplose()
+		#IA du boss
+		for k in range(2, 4):
+			dist1 = math.sqrt( (self.Joueur1.char_x - self.Joueurs[k].char_x)**2 
+					+ (self.Joueur1.char_y - self.Joueurs[k].char_y)**2 )
+			dist2 = math.sqrt( (self.Joueur2.char_x - self.Joueurs[k].char_x)**2 
+					+ (self.Joueur1.char_y - self.Joueurs[k].char_y)**2 )
+			if dist1 < dist2:
+				self.Joueurs[k].ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
+			else:
+				self.Joueurs[k].ia( (self.Joueur2.char_x, self.Joueur2.char_y) )
+			self.Joueurs[k].miner({})
+		#Déplacement des robots + joueur
+		for k in range(len(self.Joueurs)):
+			self.Joueurs[k].mouvement_char()
+		#Il y a-t-il fin de partie?
+		self.fin2partie()
+		#C'est une boucle, donc c'est re-ti-par!
+		if self.encore:
+			self.fenetre.after(20, self.boucle)	
 									
 """================Fin du mode 'Histoire"================"""
 
