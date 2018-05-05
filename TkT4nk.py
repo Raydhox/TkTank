@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.7 (Pour que je puisse me repérer).
+#Version: 0.70 (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -20,7 +20,7 @@
 
 #On import les modules nécessaires
 from tkinter import*
-import math, random, os, socket
+import math, random, socket
 
 #On crée une classe char
 class Char():
@@ -557,7 +557,7 @@ class Main():
 
 		#On crée un Canvas 'jeu'
 		self.canvas = Canvas(self.fenetre, width=1040, height=640, bg='NavajoWhite', cursor="cross")
-		self.canvas.pack(side=LEFT)
+		self.canvas.pack()
 		
 		#Nom du joueur
 		self.nom = socket.gethostname()
@@ -742,8 +742,6 @@ class Main():
 		self.canvas.bind('<Button-1>', self.start)
 		self.canvas.bind('<Button-3>', self.start)
 		self.fenetre.bind('<Escape>', self.restart)
-		#On lance le jeu
-		self.fenetre.mainloop()
 
 	def noclick(self):
 		#Supprime les interactions de la souris.
@@ -757,7 +755,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire()
+				self.main = Histoire6()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -774,16 +772,11 @@ class Main():
 				self.main.afficher()
 	
 	def restart(self, event):
-		#Stop le mode de jeu en cours.
-		try:
-			root.main.encore = False
-		except:
-			pass
-		#Supprime les interactions
-		try:
-			self.noclick()
-		except:
-			pass
+		#On détruit tout et on recommence tout.
+		#C'est bourrin, mais ça évite plein de problème
+		self.canvas.destroy()
+		self.canvas = Canvas(self.fenetre, width=1040, height=640, bg='NavajoWhite', cursor="cross")
+		self.canvas.pack()
 		#Affiche le menu
 		root.afficher()
 		
@@ -812,18 +805,19 @@ class Histoire:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Introduction: Bienvenue à vous, " +root.nom +" !" +'\n\n'
-		+"Je me présente: TkTank. Je divulgâche:"+'\n'
-		+"Je suis le boss final de ce jeu (pour ne pas dire, le jeu)." +'\n'
-		+"Je me suis permis de pirater votre PC. (Je m'ennuyais.)" +'\n'
-		+"Et comme j'aime bien voir les rageux rager..." +'\n'
-		+"Mais vous ne semblez pas faire le poids; qu'importe." +'\n'
-		+"Vous ferez l'affaire, et je me délecterai de votre courroux!" +'\n\n'
-		+"Mais faisons cela dans les règles. Voici les touches: " +'\n'
-		+"Flèches_directionnelles / zqsd / wasd : se déplacer" +'\n'
-		+"Click gauche : Tirer" +'\n' +"Click droit : Poser une mine" +'\n\n'
-		+"Je vous laisse vous familiariser avec les touches.  Ah! Et:" +'\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("Introduction: Bienvenue à vous, " +root.nom +" !\n\n"
++"""Je me présente: TkT4nk (oui, comme le jeu). Je divulgâche:
+Je suis le boss final de ce jeu. Et oui, je sais,
+nombreux sont ceux qui n'aiment pas les révélations...
+Mais c'est la raison pour laquelle que je l'ai fais!
+J'espère cependant que ce petit désagrement ne vous
+empêchera pas de prendre part au mode Histoire...
+Et comme dans tout jeu, commençons par une mission
+facile faisant office de tutoriel; voici donc les touches:
+Flèches_directionnelles / zqsd / wasd : se déplacer
+Click gauche : Tirer\nClick droit : Poser une mine
+
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1404,11 +1398,14 @@ class Histoire6:
 	
 	def mdp(self, event):
 		#Gère les entrées clavier
-		if len(event.keysym) == 1:
-			self.password = self.password[:-1] + event.keysym + '|'
-		elif event.keysym[:-1] == "KP_":
-			self.password = self.password[:-1] + event.keysym[-1] + '|'
-		elif (event.keysym == "BackSpace") and (len(self.password) > 1):
+		if len(self.password) <= 10:
+			if len(event.keysym) == 1:
+				self.password = self.password[:-1] + event.keysym + '|'
+			elif event.keysym == "space":
+				self.password = self.password[:-1] + ' ' + '|'
+			elif event.keysym[:-1] == "KP_":
+				self.password = self.password[:-1] + event.keysym[-1] + '|'
+		if (event.keysym == "BackSpace") and (len(self.password) > 1):
 			 self.password = self.password[:-2] + '|'
 	
 	def fin2partie(self, event):
@@ -1423,7 +1420,14 @@ class Histoire6:
 		if ( divulgacher(self.password) == "UlU5ol}" ):
 			#Mission accomplie: au suivant!
 			self.encore = False
+			self.fenetre.unbind('<KeyPress>')
 			root.main = Histoire0()
+			root.main.afficher()
+		elif ( divulgacher(self.password) == "sn!UlU5ol}" ):
+			#Fin Alt: Mode Difficile
+			self.encore = False
+			self.fenetre.unbind('<KeyPress>')
+			root.main = Histoire7()
 			root.main.afficher()
 		else:
 			#Coup dur; on recommence
@@ -2819,6 +2823,7 @@ class Versus():
 #On lance le jeu
 root = Main()
 root.afficher()
+root.fenetre.mainloop()
 
 
 
