@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: Gamma-Béta (Pour que je puisse me repérer).
+#Version: 0.7 (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -58,11 +58,11 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.nom = self.canvas.create_text(self.nom[1], self.nom[2], font="Time_New_Roman 15",
 										   text=str(self.nom[0]), fill=self.nom[3])
 		self.char = self.canvas.create_rectangle(self.char_x, self.char_y, self.char_x+40,
-												 self.char_y+40, width=3, fill=self.couleur)       
+												 self.char_y+40, width=2, fill=self.couleur)       
 		self.pivot = self.canvas.create_oval(self.char_x+32, self.char_y+32, self.char_x+8,
-											 self.char_y+8, width=3, fill='black')
+											 self.char_y+8, width=2, fill='black')
 		self.canon = self.canvas.create_line(self.char_x+20, self.char_y+20, self.canon_x,
-											 self.canon_y, width=10)
+											 self.canon_y, width=8)
 		
 
 	def mouvement_canon(self, event):
@@ -221,7 +221,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 							#Affichage
 							'obus':self.canvas.create_oval(self.canon_x, self.canon_y,
 														   self.canon_x+6, self.canon_y+6,
-														   width=3, fill=self.couleur)  })
+														   width=1, fill=self.couleur)  })
 	
 	def mouvement_obus(self):
 		"""===Mouvement des obus.==="""
@@ -289,7 +289,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 								#Affichage
 								'obus':self.canvas.create_oval(self.mine_x, self.mine_y,
 															   self.mine_x+5, self.mine_y+5,
-															   width=3, fill='GoldenRod')  })
+															   width=2, fill='GoldenRod')  })
 	def ia(self, cible=(520, 320) ):
 		self.terrain = root.main.terrain
 		#Position relative, correspondant au "coordonées des cases" de 40*40
@@ -583,6 +583,7 @@ class Main():
 		#Cimetière (n'est pas affiché)
 		self.terrain0.append("11111111111111111111111111")
 		self.terrain0.append("11111111111111111111111111")
+		self.terrain0.append("11111111111111111111111111")
 		
 		#Mis en place du terrain1 sous forme d'une liste 'terrain1'
 		self.terrain1 = []
@@ -603,6 +604,7 @@ class Main():
 		self.terrain1.append("10000000010000000000000001")
 		self.terrain1.append("11111111111111111111111111")
 		#Cimetière (n'est pas affiché)
+		self.terrain1.append("11111111111111111111111111")
 		self.terrain1.append("11111111111111111111111111")
 		self.terrain1.append("11111111111111111111111111")
 		
@@ -626,6 +628,7 @@ class Main():
 		self.terrain2.append("10000000000000001000000001")
 		self.terrain2.append("11111111111111111111111111")
 		#Cimetière (n'est pas affiché)
+		self.terrain2.append("11111111111111111111111111")
 		self.terrain2.append("11111111111111111111111111")
 		self.terrain2.append("11111111111111111111111111")
 	
@@ -754,7 +757,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Mission8()
+				self.main = Histoire()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -851,7 +854,7 @@ class Histoire:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = Mission1()
+			root.main = Histoire1()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -874,7 +877,7 @@ class Histoire:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)
 
-class Mission1:
+class Histoire1:
 	
 	def __init__(self):
 		#Variables globales
@@ -939,7 +942,7 @@ class Mission1:
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
 			self.canvas.unbind('<Button-3>')
-			root.main = Mission2()
+			root.main = Histoire2()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -964,7 +967,7 @@ class Mission1:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)
 		
-class Mission2:
+class Histoire2:
 	
 	def __init__(self):
 		#Variables globales
@@ -1040,7 +1043,7 @@ class Mission2:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = Mission3()
+			root.main = Histoire3()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -1075,7 +1078,7 @@ class Mission2:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)	
 			
-class Mission3:
+class Histoire3:
 	
 	def __init__(self):
 		#Variables globales
@@ -1135,13 +1138,13 @@ class Mission3:
 		if (self.Joueur1.mort):
 			self.encore = False
 			root.noclick()
-			root.main = Mission4()
+			root.main = Histoire4()
 			root.main.afficher()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
 			self.fenetre.after(20, self.boucle)				
 
-class Mission4:
+class Histoire4:
 	
 	def __init__(self):
 		#Variables globales
@@ -1220,7 +1223,7 @@ class Mission4:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = Mission5()
+			root.main = Histoire5()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -1255,7 +1258,7 @@ class Mission4:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)	
 			
-class Mission5:
+class Histoire5:
 	
 	def __init__(self):
 		#Variables globales
@@ -1330,7 +1333,7 @@ class Mission5:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = Mission6()
+			root.main = Histoire6()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -1356,7 +1359,7 @@ class Mission5:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)				
 
-class Mission6:
+class Histoire6:
 	
 	def __init__(self):
 		#Variables globales
@@ -1420,7 +1423,7 @@ class Mission6:
 		if ( divulgacher(self.password) == "UlU5ol}" ):
 			#Mission accomplie: au suivant!
 			self.encore = False
-			root.main = Mission10()
+			root.main = Histoire0()
 			root.main.afficher()
 		else:
 			#Coup dur; on recommence
@@ -1438,7 +1441,7 @@ class Mission6:
 			#C'est une boucle, donc c'est re-ti-par!
 			self.fenetre.after(20, self.boucle)		
 			
-class Mission10:
+class Histoire0:
 	
 	def __init__(self):
 		#Variables globales
@@ -1500,7 +1503,7 @@ class Mission10:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
-			root.main = FinHistoire()
+			root.main = HistoireFin()
 			root.main.afficher()
 			root.main.afficher()
 				
@@ -1522,7 +1525,7 @@ class Mission10:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)		
 
-class FinHistoire:
+class HistoireFin:
 	
 	def __init__(self):
 		#Variables globales
@@ -1547,7 +1550,7 @@ class FinHistoire:
 		pass		
 
 #==========Fin alternatif: mode difficile==========
-class Mission7:
+class Histoire7:
 	
 	def __init__(self):
 		#Variables globales
@@ -1603,7 +1606,7 @@ class Mission7:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = Mission8()
+			root.main = Histoire8()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -1623,7 +1626,7 @@ class Mission7:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)
 
-class Mission8:
+class Histoire8:
 	
 	def __init__(self):
 		#Variables globales
@@ -1712,7 +1715,7 @@ class Mission8:
 			self.encore = False
 			self.canvas.unbind('<Button-1>')
 			self.canvas.unbind('<Button-3>')
-			root.main = FinMission()
+			root.main = Histoire9()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -1745,6 +1748,118 @@ class Mission8:
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
 			self.fenetre.after(20, self.boucle)	
+
+class Histoire9:
+	
+	def __init__(self):
+		#Variables globales
+		self.terrain = root.terrain0
+		self.fenetre = root.fenetre
+		self.canvas = root.canvas
+		
+		#On crée les chars
+		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
+		self.Joueur2 = Boss(self.canvas, 920, 520, 'DarkSlateGray', ('TkTank', 980, 620, 'DarkBlue'), 100)
+		#On enregistre les Joueurs dans une liste
+		self.Joueurs = [self.Joueur1, self.Joueur2]
+
+		#Pour la boucle
+		self.encore = True
+		self.pulsar = 50
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		#Affichage de la narration
+		root.display("FIN")
+
+	def start(self, event):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, self.Joueurs)
+		#Affichage de l'objectif du chapitre
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 9: Vaincre le boss.")
+		#Affichage des pv du bos
+		self.Joueur2.rip()
+		#Evènements
+		self.fenetre.unbind('<Return>')
+		self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
+		self.canvas.bind('<Button-1>', self.Joueur1.tir)
+		self.canvas.bind('<Button-3>', self.Joueur1.miner)
+		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
+		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
+		#Et on lance la boucle
+		self.boucle()
+	
+	def fin2partie(self):
+		#Si le joueur est mort
+		if (self.Joueur1.mort):
+			#Réinitialisation
+			self.Joueur1.reborn(80, 80)
+			self.Joueur2.reborn(920, 520)
+			#Affichage des PV du boss
+			self.Joueur2.pv = 100
+			self.Joueur2.rip()
+		#Si on réussi à vaincre le boss
+		if (self.Joueur2.mort):
+			#Mission accomplie: au suivant!
+			self.encore = False
+			root.noclick()
+			root.main = Histoire10()
+			root.main.afficher()
+				
+	def boucle(self):
+		"""===Boucle principale du jeu.==="""
+		#Mouvement des obus
+		for var in range(len(self.Joueurs)):
+			self.Joueurs[var].mouvement_obus()
+		#Mine:
+		if self.Joueur1.stock_mine == 0:
+			self.Joueur1.timer -= 20
+		if (self.Joueur1.stock_mine == 0) and (self.Joueur1.timer == 0):
+			self.Joueur1.minequiexplose()
+		#IA
+		self.Joueur2.ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
+		#"Pulsar"
+		self.pulsar -= 1
+		if self.pulsar == 0:
+			self.pulsar = 50
+			self.Joueur2.tir(0)
+			self.Joueur2.tir(math.pi/2)
+			self.Joueur2.tir(math.pi)
+			self.Joueur2.tir(-math.pi/2)
+		#Déplacement des Joueurs
+		for k in range(len(self.Joueurs)):
+			self.Joueurs[k].mouvement_char()
+		self.Joueur1.mouvement_char()
+		#Il y a-t-il fin de partie?
+		self.fin2partie()
+		#C'est une boucle, donc c'est re-ti-par!
+		if self.encore:
+			self.fenetre.after(20, self.boucle)			
+
+class Histoire10:
+	
+	def __init__(self):
+		#Variables globales
+		self.terrain = root.terrain0
+		self.fenetre = root.fenetre
+		self.canvas = root.canvas
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10 (facultatif): Partager TkTank avec vos ami(e)s.")
+		#Affichage de la narration
+		root.display("Félicitation, " +root.nom +" !" +'\n\n'
+		+"PS: Je n'aurai jamais cru devoir en arriver là..." +'\n'
+		+"Devoir lancer ma copie de savegarde pour rester parfait..." +'\n'
+		+"Mais que dis-je, je suis déjà parfait, même si j'ai perdu." +'\n'
+		+"Mais j'avais pu être... plus-que-parfait!\n"
+		+"Soit dit en passant: merci d'avoir joué avec moi!\n\n"
+		+"Appuyez sur Echap pour revenir au Menu.")	
+		
+	def start(self):
+		pass		
 									
 """================Fin du mode 'Histoire"================"""
 
