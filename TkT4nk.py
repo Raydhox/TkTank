@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-#==================================TkTank==========================================================
+#==================================TkT4nk==========================================================
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.70 (Pour que je puisse me repérer).
+#Version: 0.75 (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
-#==================================================================================================
-#Jeu inspirée de:
-#   Wii Play - Char
-#Code en partie inspiré de:
-#   http://python.developpez.com/cours/apprendre-python3/?page=page_17#L17-A
 #==================================================================================================
 #Note: Oui, le code source est loin d'être élégant (le contraire, même), peut être mal commenté
 #   et si il y a des fautes de français: désolé.
@@ -269,7 +264,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 			self.mine_x = self.char_x + 20 + 32*math.sin(self.alpha+math.pi*1.5)
 			self.mine_y = self.char_y + 20 + 32*math.cos(self.alpha+math.pi*1.5)
 			self.mine = self.canvas.create_oval(self.mine_x-12, self.mine_y-12, self.mine_x+12,
-											 self.mine_y+12, width=7, fill=self.couleur)
+											 self.mine_y+12, width=6, fill=self.couleur)
 			#Pour éviter de mettre plusieurs mines
 			self.stock_mine = 0
 
@@ -755,7 +750,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire6()
+				self.main = Histoire()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -894,17 +889,19 @@ class Histoire1:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 1: Allons-y, " +root.nom  +" !"+'\n\n'
-		+"Maintenant que vous maîtrisez/connaissez les touches, " +'\n'
-		+"mettons toutes vos connaissances en pratique." +'\n'
-		+"Peut-être que je vous verrai 'ragequit' à ce niveau si simple," +'\n'
-		+"qui sait? Mais j'admets qe cela serait fort décevant..." +'\n'
-		+"Dans le cas contraire, je vous attends à la mission 5." +'\n\n'
-		+"Et dans mon infime bonté, -je sais, je sais, merci" +'\n'
-		+"une information importante: les ennemis sont immunisés" +'\n'
-		+"à toutes les balles ennemies. Vous seul pouvez les abbattre." +'\n'
-		+"(C'est un bogue, désolé >:-)" +'\n\n'		
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 1: Débutons le début\n
+L'histoire est assez simple: vous êtes la gentille héroïne (s)³|
+le gentil héro (s)³ qui a (ont) pour objectif de tuer le
+méchant -mais non moins parfait- TkT4nk, qui cherchera à
+vous en empêcher en vous faisant 'ragequit' le jeu.
+J'ai jusqu'à la mission 5 pour réussir cela...\n
+Le premier niveau se doit malheureusement d'être facile...
+Et en plus, je suis pris d'un élan de gentillesse
+-je sais, je sais, merci-; voici une information importante:
+dans le mode Histoire, les ennemis sont immunisés à
+toutes les balles ennemies. Vous seul pouvez les abbattre.
+Le développeur a un peu foiré de ce côté là...\n		
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -986,17 +983,19 @@ class Histoire2:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 2: Je meurs d'impatience de vous rencontrer!"+'\n\n'
-		+"Il faut avouer: vous avez bien assuré(e)(s)" +'\n'
-		+"pour la mission 1! Voyons, voyons," +'\n'
-		+"il reste 4 missions avant notre rencontre..." +'\n'
-		+"Que pourrais-je bien vous proposer? Eurêka!" +'\n'
-		+"Puisque je suis impatient de vous rencontrer," +'\n'
-		+"je vous redonne la même mission... Mais hâtez-vous!" +'\n\n'
-		+"Ah! Et j'ai oublié de vous dire:" +'\n'
-		+"Votre mine peut vous tuer." +'\n'
-		+"Mais peut-être que vous le saviez déjà..." +'\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 2: ça se Corse à Ajaccio\n
+Non, mon humouristique humour n'est pas douteux,
+c'est juste vous qui n'en avez pas!
+Sinon, il faut avouer: vous avez bien assuré(e)(s)
+à la mission 1! Bref, reprenons l'histoire:
+"C'est alors que %s se rendit compte qu'un chrono
+apparu, et que trois nouveaux ennemis apparèrent,
+tandis le parfait TkT4nk cherchait un moyen
+de le|la|les faire abandonner dans les règles
+définies par le programme". A propos de règles:
+Votre propre mine peut vous tuer.
+Mais peut-être que vous le saviez déjà...\n
+Appuyez sur Entrée pour commencer.""" %(root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1092,14 +1091,19 @@ class Histoire3:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 3: " +root.nom +" goûtez à la quiétude!"+'\n\n'
-		+"Il faut avouer que la mission 2 était un peu hardue..." +'\n'
-		+"Comme je suis magnanime -pas la peine de me remercier-" +'\n'
-		+"votre troisième mission sera simple: rassénérez-vous!" +'\n'
-		+"Allez boire un café/thé/chocolat chaud, étirez-vous..." +'\n'
-		+"Et quand vous aurez fini, faîtes-le moi savoir." +'\n'
-		+"Comment? Bonne question, lol." +'\n\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 3: En toute (in)quiétude\n
+Dans les jeux vidéos, vous passez votre temps à
+exterminez des monstres sans état d'âme parce que
+vous êtes le(s) gentil(le)(s) et eux, les méchants.
+N'avez-vous donc aucune pitié?
+"Mais le gentil héros (s)³| la gentille héroïne (s)³
+avaient une mission à accomplir: vaincre le méchant
+TkT4nk, malgré l'importance capitale qu'il avait: sans lui,
+il n'y aurait pas eu de mode Histoire, voire pas de jeu.
+Pourtant, %s poursuivait sa quête."
+Une question se pose alors: êtes-vous réellement libre?
+Usez donc de cette liberté pour sortir de cette mission.\n
+Appuyez sur Entrée pour commencer.""" %(root.nom))
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1163,20 +1167,21 @@ class Histoire4:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 4: En général, mon colonel..."+'\n\n'
-		+"Je dirais même, mes colonels, finissent le travail." +'\n'
-		+"Rares sont les joueurs qui réussissent à m'affronter." +'\n'
-		+"Au fait: félicitation d'avoir trouver la solution" +'\n'
-		+"à la mission 3. Moi-même j'avais oublié la solution;" +'\n'
-		+"j'ai dû regarder le code source, pour vous dire..." +'\n'
-		+"Peut-être que finalement, je vous ai jugé(e)(s) trop vite." +'\n'
-		+"Si tel est le cas, retrouvez-moi:" +'\n'
-		+"Empruntez le téléporteur noté 'x' en rouge." +'\n'
-		+"Mais faîtes vite, j'ai de nombreuses qualités," +'\n'
-		+"mais pas la patience. (Mais je reste parfait)" +'\n\n'
-		+"Note: les colonels se distinguent par leur PV:" +'\n'
-		+"Vous devez les toucher dix fois pour les vaincre." +'\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 4: En général, mon colonel...\n
+Je dirais même, mes colonels, puisque ce sont eux
+que vous devraient affronter. Mais pas directement:
+votre objectif est le téléporteur noté 'x' en rouge.
+Il vous ménera jusqu'à moi, puisqu'il semblerait que
+notre rencontre est inéluctable, vu vos compétences...
+Mais faîtes vite, j'ai toutes les qualités possibles,
+et l'impatience appartient à cet ensemble.
+"Après réflexion, %s n'était pas libre:
+Il n'y a aucun choix à faire dans le mode Histoire.
+Et même si il devait en faire (cf le Menu),
+tous ces choix étaient déterminés par le Jeu..."
+Note: les colonels se distinguent par leur PV:
+Vous devez les toucher dix fois pour les vaincre.\n
+Appuyez sur Entrée pour commencer.""" %(root.nom))
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1275,21 +1280,23 @@ class Histoire5:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 5: TkTank"+'\n\n'
-		+"Incroyable! Je n'en reviens pas! Vous m'impressionnez!" +'\n'
-		+"Je n'aurais jamais cru que vous réussiriez à venir" +'\n'
-		+"jusqu'à moi! Vous êtes vraiment doué(e)(s)!" +'\n'
-		+"Moins que moi, c'est sûr, mais doué(e)(s)!" +'\n'
-		+"Malheureusement pour vous, votre odyssée s'achève" +'\n'
-		+"ICI ET MAINTENENT !!! MOUAH HAHAHA !!!" +'\n'
-		+"Préparez-vous à affronter un boss digne de ce nom" +'\n'
-		+"histoire de finir ce jeu en beauté!" +'\n\n'
-		+"Et comme je suis le jeu, j'ai réussi à:" +'\n'
-		+"1 - Poser des mines." +'\n'
-		+"2 - Être immunisé à mes mines." +'\n'
-		+"3 - Immuniser mes deux derniers colonels" +'\n'
-		+"i - Rappel: vos mine touche tout le monde." +'\n\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 5: %s\n
+Vous voilà face à moi, prêt à me vaincre. Climax.
+Je devrais montrer l'étendue de ma cruauté,
+et vous devrez me vaincre en tant que gentil(le)(s)
+héro(ïne)(s). Si possible, je vous fais une révélation:
+Je suis le méchant et le boss du jeu; je peux poser
+des mines, et les mécaniques du mode Histoire font que
+seul(s) vous y êtes(nt) vulnérable(s). Mes PV
+seront affichés en bas de l'écran. Sérieusement:
+"Pourquoi diantre %s ? Et coïncidence,
+c'est le nom de votre Ordinateur (joli nom,
+soit dit en passant). Après tout, c'est vous le
+Joueur, celui qui est contrôle ce Char sans conscience.
+La vérité, c'est que j'ai besoin de vous: je suis
+le parfait TkT4nk, parasite de %s,
+et vous contrôlez l'hôte qui se défend."\n
+Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom, root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
