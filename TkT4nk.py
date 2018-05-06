@@ -750,7 +750,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire3()
+				self.main = Histoire()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
