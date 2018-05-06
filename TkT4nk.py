@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.75 +i (Pour que je puisse me repérer).
+#Version: 0.75 + 3i (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -604,7 +604,7 @@ class Main():
 		self.terrain1.append("11111111111111111111111111")
 		
 		#Mis en place du terrain2 sous forme d'une liste 'terrain2'
-		#(C'est un miroir du terrain1.)
+		#(C'est une 'symétrie' du terrain1.)
 		self.terrain2 = []
 		self.terrain2.append("11111111111111111111111111")
 		self.terrain2.append("10000000010000000000000001")
@@ -750,7 +750,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire()
+				self.main = Histoire3()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -804,7 +804,7 @@ class Histoire:
 Je me présente: TkT4nk (oui, comme le jeu). Je divulgâche:
 Je suis le boss final de ce jeu. Et oui, je sais,
 nombreux sont ceux qui n'aiment pas les révélations...
-Mais c'est la raison pour laquelle que je l'ai fais!
+Mais c'est la raison pour laquelle que je l'ai fait!
 J'espère cependant que ce petit désagrement ne vous
 empêchera pas de prendre part au mode Histoire...
 Et comme dans tout jeu, commençons par une mission
@@ -890,16 +890,16 @@ class Histoire1:
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("""Mission 1: Débutons le début\n
-L'histoire est assez simple: vous êtes la gentille héroïne (s)³|
-le gentil héro (s)³ qui a (ont) pour objectif de tuer le
-méchant -mais non moins parfait- TkT4nk, qui cherchera à
+L'histoire est assez simple: vous êtes la gentille héroïne|
+le gentil héros qui a pour objectif de tuer le méchant
+-mais non moins parfait- TkT4nk, qui cherchera à
 vous en empêcher en vous faisant 'ragequit' le jeu.
 J'ai jusqu'à la mission 5 pour réussir cela...\n
 Le premier niveau se doit malheureusement d'être facile...
 Et en plus, je suis pris d'un élan de gentillesse
 -je sais, je sais, merci-; voici une information importante:
 dans le mode Histoire, les ennemis sont immunisés à
-toutes les balles ennemies. Vous seul pouvez les abbattre.
+toutes les balles ennemies. Vous seul(e) pouvez les abbattre.
 Le développeur a un peu foiré de ce côté là...\n		
 Appuyez sur Entrée pour commencer.""")
 
@@ -986,12 +986,12 @@ class Histoire2:
 		root.display("""Mission 2: ça se Corse à Ajaccio\n
 Non, mon humouristique humour n'est pas douteux,
 c'est juste vous qui n'en avez pas!
-Sinon, il faut avouer: vous avez bien assuré(e)(s)
+Sinon, il faut avouer: vous avez bien assuré
 à la mission 1! Bref, reprenons l'histoire:
 "C'est alors que %s se rendit compte qu'un chrono
-apparu, et que trois nouveaux ennemis apparèrent,
+apparu, et que trois nouveaux ennemis apparurent,
 tandis le parfait TkT4nk cherchait un moyen
-de le|la|les faire abandonner dans les règles
+de le|la faire abandonner dans les règles
 définies par le programme". A propos de règles:
 Votre propre mine peut vous tuer.
 Mais peut-être que vous le saviez déjà...\n
@@ -1094,10 +1094,10 @@ class Histoire3:
 		root.display("""Mission 3: En toute (in)quiétude\n
 Dans les jeux vidéos, vous passez votre temps à
 exterminez des monstres sans état d'âme parce que
-vous êtes le(s) gentil(le)(s) et eux, les méchants.
+vous êtes le|la gentil(le) et eux, les méchants.
 N'avez-vous donc aucune pitié?
-"Mais le gentil héros (s)³| la gentille héroïne (s)³
-avaient une mission à accomplir: vaincre le méchant
+"Mais le gentil héros | la gentille héroïne
+avait une mission à accomplir: vaincre le méchant
 TkT4nk, malgré l'importance capitale qu'il avait: sans lui,
 il n'y aurait pas eu de mode Histoire, voire pas de jeu.
 Pourtant, %s poursuivait sa quête."
@@ -1171,13 +1171,13 @@ class Histoire4:
 Je dirais même, mes colonels, puisque ce sont eux
 que vous devraient affronter. Mais pas directement:
 votre objectif est le téléporteur noté 'x' en rouge.
-Il vous ménera jusqu'à moi, puisqu'il semblerait que
+Il vous mènera jusqu'à moi, puisqu'il semblerait que
 notre rencontre est inéluctable, vu vos compétences...
 Mais faîtes vite, j'ai toutes les qualités possibles,
 et l'impatience appartient à cet ensemble.
 "Après réflexion, %s n'était pas libre:
-Il n'y a aucun choix à faire dans le mode Histoire.
-Et même si il devait en faire (cf le Menu),
+Il n'y avait aucun choix à faire dans le mode Histoire.
+Et même si il devait en faire un (cf le Menu),
 tous ces choix étaient déterminés par le Jeu..."
 Note: les colonels se distinguent par leur PV:
 Vous devez les toucher dix fois pour les vaincre.\n
@@ -1283,20 +1283,18 @@ class Histoire5:
 		root.display("""Mission 5: %s\n
 Vous voilà face à moi, prêt à me vaincre. Climax.
 Je devrais montrer l'étendue de ma cruauté,
-et vous devriez me vaincre en tant que gentil(le)(s)
-héro(ïne)(s). Si possible, je vous fais une révélation:
+et vous devriez me vaincre en tant que gentil(le)
+héro(ïne). Si possible, je vous fais une révélation:
 Je suis le méchant et le boss du jeu; je peux poser
 des mines, et les mécaniques du mode Histoire font que
-seul(s) vous y êtes(nt) vulnérable(s). Mes PV
-seront affichés en bas de l'écran. Plus sérieusement:
-"Pourquoi diantre %s ? Et coïncidence,
-c'est le nom de votre Ordinateur (joli nom,
-soit dit en passant). Après tout, c'est vous le
-Joueur, celui qui est contrôle ce Char sans conscience.
-La vérité, c'est que j'ai besoin de vous: je suis
-le parfait TkT4nk, parasite de %s,
-et vous contrôlez l'hôte qui se défend."\n
-Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom, root.nom) )
+seul(e) vous y êtes vulnérable.
+Mes PV seront affichés en bas de l'écran.
+"TkT4nk se préparait à combattre %s.
+Et dire qu'il connaissait rien de lui, pas même son nom.
+Le seul nom auquel il n'a jamais eu accès était le nom
+de ce PC. Le PC qui l'avait si gentiment hébergé, et qui
+semblait maintenant se retourner contre lui..."\n
+Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
