@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.75 (Pour que je puisse me repérer).
+#Version: 0.75 +i (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -800,19 +800,19 @@ class Histoire:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Introduction: Bienvenue à vous, " +root.nom +" !\n\n"
-+"""Je me présente: TkT4nk (oui, comme le jeu). Je divulgâche:
+		root.display("""Introduction: Bienvenue à vous, %s !\n
+Je me présente: TkT4nk (oui, comme le jeu). Je divulgâche:
 Je suis le boss final de ce jeu. Et oui, je sais,
 nombreux sont ceux qui n'aiment pas les révélations...
 Mais c'est la raison pour laquelle que je l'ai fais!
 J'espère cependant que ce petit désagrement ne vous
 empêchera pas de prendre part au mode Histoire...
 Et comme dans tout jeu, commençons par une mission
-facile faisant office de tutoriel; voici donc les touches:
-Flèches_directionnelles / zqsd / wasd : se déplacer
-Click gauche : Tirer\nClick droit : Poser une mine
-
-Appuyez sur Entrée pour commencer.""")
+facile faisant office de tutoriel; voici donc les touches:\n
+Flèches_directionnelles | zqsd | wasd : se déplacer
+Click gauche : Tirer
+Click droit : Poser une mine\n
+Appuyez sur Entrée pour commencer.""" %(root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1283,12 +1283,12 @@ class Histoire5:
 		root.display("""Mission 5: %s\n
 Vous voilà face à moi, prêt à me vaincre. Climax.
 Je devrais montrer l'étendue de ma cruauté,
-et vous devrez me vaincre en tant que gentil(le)(s)
+et vous devriez me vaincre en tant que gentil(le)(s)
 héro(ïne)(s). Si possible, je vous fais une révélation:
 Je suis le méchant et le boss du jeu; je peux poser
 des mines, et les mécaniques du mode Histoire font que
 seul(s) vous y êtes(nt) vulnérable(s). Mes PV
-seront affichés en bas de l'écran. Sérieusement:
+seront affichés en bas de l'écran. Plus sérieusement:
 "Pourquoi diantre %s ? Et coïncidence,
 c'est le nom de votre Ordinateur (joli nom,
 soit dit en passant). Après tout, c'est vous le
