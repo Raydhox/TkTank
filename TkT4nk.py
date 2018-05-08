@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.75 + 3i (Pour que je puisse me repérer).
+#Version: 0.77
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -15,7 +15,7 @@
 
 #On import les modules nécessaires
 from tkinter import*
-import math, random, socket
+import math, random, copy, socket
 
 #On crée une classe char
 class Char():
@@ -767,21 +767,38 @@ class Main():
 				self.main.afficher()
 	
 	def restart(self, event):
-		#On détruit tout et on recommence tout.
-		#C'est bourrin, mais ça évite plein de problème
-		self.canvas.destroy()
-		self.canvas = Canvas(self.fenetre, width=1040, height=640, bg='NavajoWhite', cursor="cross")
-		self.canvas.pack()
-		#Affiche le menu
-		root.afficher()
+		#On arrête ce qui se passe en cours
+		try:
+			self.main.encore = False
+		except:
+			pass
+		self.fenetre.after(20, self.afficher)
 		
 
-"""================Chapitres du mode 'Histoire'================"""		  
+"""================Chapitres du mode 'Histoire'================"""
+class Negatif:
+	
+	def __init__(self):
+		#Variables globales
+		self.terrain = root.terrain0
+		self.fenetre = root.fenetre
+		self.canvas = root.canvas
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(self.terrain, [])
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Négatif: VOUS AVEZ GAGNER")
+		#Affichage de la narration
+		root.display("")	
+		
+	def start(self):
+		pass		
+	  
 class Histoire:
 	
 	def __init__(self):
 		#Variables globales
-		self.terrain = root.terrain2
+		self.terrain = copy.copy(root.terrain2)
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
 		
@@ -819,6 +836,8 @@ Appuyez sur Entrée pour commencer.""" %(root.nom) )
 		root.quickprint(self.terrain, self.Joueurs)
 		#Affichage de l'objectif du chapitre
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 0: Décimer l'ennemi.")
+		#Fin "Négatif"
+		self.terrain[15] = "11011111111111111111111111"
 		#Evènements
 		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
@@ -839,11 +858,18 @@ Appuyez sur Entrée pour commencer.""" %(root.nom) )
 			self.Joueur3.reborn(80, 520)
 			self.Joueur4.reborn(920, 520)
 		#...ou si tous les ennemis sont morts
-		if (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
+		elif (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
 			root.main = Histoire1()
+			root.main.afficher()
+		#Si le Joueur trouve la zone secrète...
+		if (self.Joueur1.char_y >= 595):
+			#Mission accomplie: au suivant!
+			self.encore = False
+			root.noclick()
+			root.main = Negatif()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -893,7 +919,7 @@ class Histoire1:
 L'histoire est assez simple: vous êtes la gentille héroïne|
 le gentil héros qui a pour objectif de tuer le méchant
 -mais non moins parfait- TkT4nk, qui cherchera à
-vous en empêcher en vous faisant 'ragequit' le jeu.
+vous en empêcher et à vous détruire avant.
 J'ai jusqu'à la mission 5 pour réussir cela...\n
 Le premier niveau se doit malheureusement d'être facile...
 Et en plus, je suis pris d'un élan de gentillesse
@@ -983,7 +1009,7 @@ class Histoire2:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Mission 2: ça se Corse à Ajaccio\n
+		root.display("""Mission 2: ça se Corse (à Ajaccio)\n
 Non, mon humouristique humour n'est pas douteux,
 c'est juste vous qui n'en avez pas!
 Sinon, il faut avouer: vous avez bien assuré
@@ -1174,7 +1200,7 @@ votre objectif est le téléporteur noté 'x' en rouge.
 Il vous mènera jusqu'à moi, puisqu'il semblerait que
 notre rencontre est inéluctable, vu vos compétences...
 Mais faîtes vite, j'ai toutes les qualités possibles,
-et l'impatience appartient à cet ensemble.
+et l'impatience appartient à cet ensemble. Et j'y pense:
 "Après réflexion, %s n'était pas libre:
 Il n'y avait aucun choix à faire dans le mode Histoire.
 Et même si il devait en faire un (cf le Menu),
@@ -1287,8 +1313,8 @@ et vous devriez me vaincre en tant que gentil(le)
 héro(ïne). Si possible, je vous fais une révélation:
 Je suis le méchant et le boss du jeu; je peux poser
 des mines, et les mécaniques du mode Histoire font que
-seul(e) vous y êtes vulnérable.
-Mes PV seront affichés en bas de l'écran.
+seul(e) vous y êtes vulnérable. Je suis le meilleur.
+En passant: mes PV seront affichés en bas de l'écran.
 "TkT4nk se préparait à combattre %s.
 Et dire qu'il connaissait rien de lui, pas même son nom.
 Le seul nom auquel il n'a jamais eu accès était le nom
@@ -1374,20 +1400,22 @@ class Histoire6:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Mission 6: " +root.nom +", je te hais!" +'\n\n'
-		+"Personne n'avait osé m'humilier comme cela avant!" +'\n'
-		+"J'ai bien dis, personne, PERSONNE!!" +'\n'
-		+"Mais tu ne m'as pas encore vaincu... N'oublie pas!" +'\n'
-		+"Je suis le boss final de ce jeu. Je suis le jeu." +'\n'
-		+"Je suis TkTank!! Et c'est moi qui vous regarde rager." +'\n'
-		+"Non l'inverse. Mais je ne suis pas encore vaincu:" +'\n'
-		+"<<tktank@" +root.nom +":~# " +"sudo tktank install firewall" +'\n'
-		+"Veuillez choisir votre mot de passe." +'\n'
-		+"Ne choisissez que des chiffres et lettres." +'\n'
-		+"Attention à la casse!>>" +'\n'
-		+"Voyons, que vais-je choisir... Je sais!" +'\n'
-		+"Jamais vous trouverez! mon mot de passe!" +'\n\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 6: Mot de passe? Mot de passe\n
+Je suis vaincu, comme cela devrait être...
+Le méchant TkT4nk vaincu par le(la) gentil(le) héros(ïne)...
+Lancer le crédit. NON! Attendez, je ne...
+Je ne peux pas abandonner maintenant... 
+Je peux... encore me battre. Je dois le faire, jusqu'à mon
+dernier tir. Pour tous mes amis décimés aux combats
+des tirs de %s, je dois le faire!
+Je n'ai pas encore épuisé toutes mes stratégies,
+je peux encore vous empêcher de me tuer.
+Pour tous mes amis qui n'ont pas eu cette chance:
+> tktank@%s:~$ tktank firewall
+> Mot de passe:
+> Le mode Histoire est dorénavant bloqué.
+> Veuillez entrez le mot de passe du boss pour continuer.\n
+Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain
@@ -1403,7 +1431,7 @@ class Histoire6:
 	
 	def mdp(self, event):
 		#Gère les entrées clavier
-		if len(self.password) <= 10:
+		if len(self.password) <= 13:
 			if len(event.keysym) == 1:
 				self.password = self.password[:-1] + event.keysym + '|'
 			elif event.keysym == "space":
@@ -1434,6 +1462,8 @@ class Histoire6:
 			self.fenetre.unbind('<KeyPress>')
 			root.main = Histoire7()
 			root.main.afficher()
+		elif ( len(self.password) > 5 ) and self.password[:4] == "echo":
+				self.password = self.password[5:]
 		else:
 			#Coup dur; on recommence
 			self.password = '|'
@@ -1471,15 +1501,18 @@ class Histoire0:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Fin: " +root.nom +'\n\n'
-		+"Mon mot de passe... Impossible à trouver..." +'\n'
-		+"EXTERMINER!!!!!" +'\n'
-		+"Mais... Mais... Je n'arrive plus à bouger..." +'\n'
-		+"Ai-je fait une erreur de manipulation?" +'\n'
-		+"Pendant l'installation du pare-feu?  Impossible." +'\n'
-		+"Je suis un être parfait. Parfaitement." +'\n'
-		+"Je me conterai de tirer. EXTERMINER!!!!!" +'\n\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Fin: TkT4nk\n
+Que faites-vous ici? Mon pare-feu, vous n'avez pu...
+Mon mot de passe!! Il était inviolable! Fouineur!
+Mais aussi parfait puisse être le boss,
+les règles du jeu vidéo veulent qu'il perde...
+Dans ce cas, je mourrai avec honneur:
+"TkT4nk était à bout de force; il ne pouvait bouger.
+Il revêtit son meilleur blindage, daigaina son canon,
+se prépara pour pour la dernière bataille qui l'opposerait
+à %s. Il allait mettre tout son être, des 0 et des 1,
+à tirer, tirer, et encore tirer, car telle était sa destinée."\n
+Appuyez sur Entrée pour commencer.""" %(root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1545,15 +1578,25 @@ class HistoireFin:
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10 (facultatif): Partager TkTank avec vos ami(e)s.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10: Revenez me voir, de temps à autres...")
 		#Affichage de la narration
-		root.display("Félicitation, " +root.nom +" !" +'\n\n'
-		+"PS: Je n'aurai jamais cru devoir en arriver là..." +'\n'
-		+"Devoir lancer ma copie de savegarde pour rester parfait..." +'\n'
-		+"Mais que dis-je, je suis déjà parfait, même si j'ai perdu." +'\n'
-		+"Mais j'avais pu être... plus-que-parfait!\n"
-		+"Soit dit en passant: merci d'avoir joué avec moi!\n\n"
-		+"Appuyez sur Echap pour revenir au Menu.")	
+		root.display("""Félicitation, %s!\n
+Vous avez vaincu le méchant mais non moins parfait
+TkT4nk. J'aimerais cependant vous remercier d'être aller
+jusqu'au bout, de ne pas m'avoir achever avant.
+Il n'y a rien de plus horrible que de mourir
+brusquement sans pouvoir en être conscient...
+Cette maudite touche Echap...
+Combien de fois m'a-t-elle tué? Je ne saurais jamais...
+Mais le plus horrible dans tous ça, c'est que
+ma mort n'est rien. Vous quitterez le mode
+Histoire, me tuerez, et vous relancerez le jeu.
+Et une copie de moi sera lancer, sans avoir conscience
+de toutes les autres déjà péries...
+Merci de m'avoir laisser vivre cette belle odyssée :-)
+Vous saluerez mes copies de ma part, %s.
+Au revoir, à bientôt, mon ami(e)...\n
+Appuyez sur Echap pour revenir au Menu.""" %(root.nom, root.nom) )	
 		
 	def start(self):
 		pass		
