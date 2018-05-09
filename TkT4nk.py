@@ -6,9 +6,9 @@
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
 #Idée d'amélioration: Une meilleure IA (un peu osef); un mode réseau (!!!!);
-#Pygame: bande sonore (prévu); support manette (...).
-#License: J'y connais pas grand chose, on va dire que vous pouvez
-#copier-modifier-partager-faire ce que vous voulez, sauf usage commercial.
+#	Pygame: bande sonore (prévu); support manette (...).
+#License: Je ne m'y connais pas grand chose, on va dire que vous pouvez
+#	copier-modifier-partager-faire ce que vous voulez, sauf usage commercial.
 #==================================================================================================
 #Note: Oui, le code source est loin d'être élégant (le contraire, même), peut être mal commenté
 #   et si il y a des fautes de français: désolé.
