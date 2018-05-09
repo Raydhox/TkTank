@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.77
+#Version: 0.8 (Pour que je puisse me repérer).
 #Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
 #License: License libre
 #==================================================================================================
@@ -750,7 +750,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire()
+				self.main = Histoire8()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -1509,8 +1509,9 @@ les règles du jeu vidéo veulent qu'il perde...
 Dans ce cas, je mourrai avec honneur:
 "TkT4nk était à bout de force; il ne pouvait bouger.
 Il revêtit son meilleur blindage, daigaina son canon,
-se prépara pour pour la dernière bataille qui l'opposerait
-à %s. Il allait mettre tout son être, des 0 et des 1,
+se prépara pour pour la dernière bataille qui l'opposait
+à %s. Il allait mettre tout son être,
+(qui sont, techniquement, des 0 et des 1)
 à tirer, tirer, et encore tirer, car telle était sa destinée."\n
 Appuyez sur Entrée pour commencer.""" %(root.nom) )
 
@@ -1612,7 +1613,7 @@ class Histoire7:
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'DarkSlateGray', ('TkTank (bogué)', 920, 620, 'DarkBlue'), 999)
+		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'Black', ('Error: No file', 920, 620, 'Black'), 999)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
@@ -1623,19 +1624,28 @@ class Histoire7:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Fin: " +root.nom +'\n\n'
-		+"Mon mot de passe... Impossible à trouver..." +'\n'
-		+"EXTERMINER!!!!!" +'\n'
-		+"Mais... Mais... Je n'arrive plus à bouger..." +'\n'
-		+"Ai-je fait une erreur de manipulation?" +'\n'
-		+"Pendant l'installation du pare-feu?  Impossible." +'\n'
-		+"Je suis un être parfait. Parfaitement." +'\n'
-		+"Je me conterai de tirer. EXTERMINER!!!!!" +'\n\n'
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 7: Feu le pare-feu\n
+Sérieusement, vous avez vraiment fait ça?
+Vous l'avez vraiment pris au premier degré?
+Vous avez supprimé TkT4nk! Alors oui, nous avons une
+sauvegarde de secours du TkT4nk original
+afin justement de pouvoir le restaurer...
+Mais vous avez quand même failli l'annihlé!
+Et du coup, le jeu plante (verte) sur la mission...
+Vous ne pouvez plus tirer, ni poser une mine...
+Et on se retrouve avec un char invisible...
+Mais nous pouvons arranger cela:
+pour commencer, sortez de cette mission 
+via le téléporteur plus bas. Oui, vous pouvez
+appuyez sur la touche Echap, mais faisons ça
+proprement, voulez-vous bien.?
+PS: N'utilisez jamais eval(input()) avec python3...\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, self.Joueurs)
+		self.canvas.create_rectangle(440, 240, 560, 360, width=0, fill='NavajoWhite')
 		#Affichage de l'objectif du chapitre
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 7: Prendre.")
 		#Affichage de la zone à atteindre
@@ -1688,9 +1698,9 @@ class Histoire8:
 		
 		#On crée les chars		
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Char(self.canvas, 80, 520, 'Orange', ('Miroir', 60, 620, 'White'))		
-		self.Joueur3 = Boss(self.canvas, 920, 80, 'Red', ('Boss (a 60 PV)', 920, 20, 'DarkRed'), 60 )
-		self.Joueur4 = Boss(self.canvas, 920, 520, 'DodgerBlue', ('Clone (a 60 PV)', 920, 620, 'DarkBlue'), 60 )
+		self.Joueur2 = Char(self.canvas, 80, 520, 'Orange', (root.nom, 60, 620, 'White'))		
+		self.Joueur3 = Boss(self.canvas, 920, 80, 'Red', ('TkT4nk (a 60 PV)', 920, 20, 'DarkRed'), 60 )
+		self.Joueur4 = Boss(self.canvas, 920, 520, 'DodgerBlue', ('TkT4nk (a 60 PV)', 920, 620, 'DarkBlue'), 60 )
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
 		#Pour la boucle
@@ -1727,11 +1737,23 @@ class Histoire8:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("La pénultième mission:\n"
-		+"Quand le Joueur1 se déplace,\n"
-		+"le Joueur2 aussi. Quand le Joueur2 tir ou pose une mine\n"
-		+"le Joueur1 fait de même.\n\n"
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 8: Copier-Coller\n
+Brilliant! Vous avez assuré(e)! Et maintenant,
+que vais-je faire... Voyns voyons...
+Voilà, je restore les données de TkT4nk...
+Non, s'il te plaît, tais-toi, merci bien!
+Ctrl+C, Ctrl+V et... Bref, tout m'a l'air en ordre,
+vous pouvez maintenant le vaincre proprement.
+Diantre! Il semblerait que le copier-coller ait
+un peu trop bien marcher... Il y a maintenant
+deux TkT4nk et deux %s!!
+Mais vous arrangerez cela, bien entendu!
+Mais je vais vous aider: d'après les données du jeu,
+aucun des deux %s ne doit mourir,
+et les PV du dernier TkT4nk touché
+seront affichés en bas de l'écran.
+Je vais aussi mettre un peu plus de couleurs...\n
+Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1823,7 +1845,8 @@ class Histoire9:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("FIN")
+		root.display("""Mission 9: P.U.L.S.A.R.\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2324,9 +2347,8 @@ class Coop3:
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("Dans les deux niveaux qui suivent,\n"
-		+"il faut que chaque Joueur atteigne la croix de sa couleur..\n"
-		+"Attention cependant! Ces ennemis ont 60 PV\n"
-		+"et ils peuvent poser des mines!\n\n"
+		+"il faut que chaque Joueur atteigne la croix de sa couleur.\n"
+		+"Attention cependant! Ces ennemis ont 60 PVs\n\n"
 		+"Appuyez sur Entrée pour commencer.")
 
 	def start(self, event):
