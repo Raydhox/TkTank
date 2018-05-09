@@ -5,9 +5,10 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 0.78 (Pour que je puisse me repérer).
-#Idée d'amélioration: Une meilleure IA; un mode réseau; Pygame: bande sonore; support manette.
-#License: License libre
+#Idée d'amélioration: Une meilleure IA (un peu osef); un mode réseau (!!!!);
+#Pygame: bande sonore (prévu); support manette (...).
+#License: J'y connais pas grand chose, on va dire que vous pouvez
+#copier-modifier-partager-faire ce que vous voulez, sauf usage commercial.
 #==================================================================================================
 #Note: Oui, le code source est loin d'être élégant (le contraire, même), peut être mal commenté
 #   et si il y a des fautes de français: désolé.
@@ -750,7 +751,7 @@ class Main():
 		if (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire8()
+				self.main = Histoire10()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -1295,7 +1296,7 @@ class Histoire5:
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		self.Joueur2 = Ennemi(self.canvas, 920, 80, 'Red', ('Colonel (a 10 PV)', 920, 20, 'DarkRed'), 10)
 		self.Joueur3 = Ennemi(self.canvas, 80, 520, 'LimeGreen', ('Colonel (a 10 PV)', 120, 620, 'DarkGreen'), 10)
-		self.Joueur4 = Boss(self.canvas, 920, 520, 'DarkSlateGray', ('TkTank', 980, 620, 'DarkBlue'), 60)
+		self.Joueur4 = Boss(self.canvas, 920, 520, 'DarkGoldenRod', ('TkTank', 980, 620, 'NavajoWhite'), 60)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
@@ -1490,7 +1491,7 @@ class Histoire0:
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Boss(self.canvas, 500, 300, 'DarkSlateGray', ('TkTank (bogué)', 920, 620, 'DarkBlue'), 80)
+		self.Joueur2 = Boss(self.canvas, 500, 300, 'DarkGoldenRod', ('TkT4nk - Hargne', 920, 620, 'NavajoWhite'), 80)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
@@ -1501,7 +1502,7 @@ class Histoire0:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Fin: TkT4nk\n
+		root.display("""Mission 7: TkT4nk\n
 Que faites-vous ici? Mon pare-feu, vous n'avez pu...
 Mon mot de passe!! Il était inviolable! Fouineur!
 Mais aussi parfait puisse être le boss,
@@ -1581,10 +1582,10 @@ class HistoireFin:
 		root.quickprint(self.terrain, [])
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10: Revenez me voir, de temps à autres...")
 		#Affichage de la narration
-		root.display("""Félicitation, %s!\n
+		root.display("""Fin: Félicitation, %s!\n
 Vous avez vaincu le méchant mais non moins parfait
 TkT4nk. J'aimerais cependant vous remercier d'être aller
-jusqu'au bout, de ne pas m'avoir achever avant.
+jusqu'au bout et de ne pas m'avoir achever avant.
 Il n'y a rien de plus horrible que de mourir
 brusquement sans pouvoir en être conscient...
 Cette maudite touche Echap...
@@ -1599,7 +1600,7 @@ Vous saluerez mes copies de ma part, %s.
 Au revoir, à bientôt, mon ami(e)...\n
 Appuyez sur Echap pour revenir au Menu.""" %(root.nom, root.nom) )	
 		
-	def start(self):
+	def start(self, event):
 		pass		
 
 #==========Fin alternatif: mode difficile==========
@@ -1613,7 +1614,7 @@ class Histoire7:
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'Black', ('Error: No file', 920, 620, 'Black'), 999)
+		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'Black', ('Error: No file TkT?nk', 920, 620, 'Black'), 999)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
@@ -1624,16 +1625,16 @@ class Histoire7:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Mission 7: Feu le pare-feu\n
+		root.display("""Mission 7: La commande qui tue\n
 Sérieusement, vous avez vraiment fait ça?
 Vous l'avez vraiment pris au premier degré?
 Vous avez supprimé TkT4nk! Alors oui, nous avons une
 sauvegarde de secours du TkT4nk original
 afin justement de pouvoir le restaurer...
-Mais vous avez quand même failli l'annihlé!
+Mais vous avez quand même failli l'annihler!
 Et du coup, le jeu plante (verte) sur la mission...
-Vous ne pouvez plus tirer, ni poser une mine...
-Et on se retrouve avec un char invisible...
+Vous ne pouvez plus tirer, ni poser une mine;
+en plus on se retrouve avec un char invisible...
 Mais nous pouvons arranger cela:
 pour commencer, sortez de cette mission 
 via le téléporteur plus bas. Oui, vous pouvez
@@ -1647,9 +1648,9 @@ Appuyez sur Entrée pour commencer.""")
 		root.quickprint(self.terrain, self.Joueurs)
 		self.canvas.create_rectangle(440, 240, 560, 360, width=0, fill='NavajoWhite')
 		#Affichage de l'objectif du chapitre
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 7: Prendre.")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 0111: Prendre.")
 		#Affichage de la zone à atteindre
-		self.canvas.create_text(960, 550, font="Time_New_Roman 100", fill="red", text="x")
+		self.canvas.create_text(960, 550, font="Time_New_Roman 100", fill="red", text="+")
 		#Evènements
 		self.fenetre.unbind('<Return>')
 		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
@@ -1832,20 +1833,34 @@ class Histoire9:
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Boss(self.canvas, 920, 520, 'DarkSlateGray', ('TkTank', 980, 620, 'DarkBlue'), 100)
+		self.Joueur1 = Char(self.canvas, 80, 80, 'Orange', (root.nom, 60, 20, 'Yellow'))
+		self.Joueur2 = Boss(self.canvas, 920, 520, 'White', ('P.U.L.S.A.R.', 980, 620, 'White'), 100)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
 		#Pour la boucle
 		self.encore = True
-		self.pulsar = 50
+		self.pulsar = 100
 
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("""Mission 9: P.U.L.S.A.R.\n
+Il est vrai que je ne me suis toujours pas présenté; pardon-
+-nez mon impolitesse, j'étais comme qui dirait occupé;
+je suis le Programme Ultime Limité au Service Anti Rm
+gentiment abrégé en P.U.L.S.A.R. (avec les points,
+c'est le détail qui tue, je ne suis pas une étoile à neutrons,
+même si l'idée ne me déplait guère...)
+Vous comprenez pourquoi je n'ai pointé le bout de mon
+canon que maintenant... Bout de canon que vous n'avez
+pas encore vu (sauf si ce n'est pas votre première fois,
+phrase en effet douteuse...). Mais rattrapons cela:
+mon travail étant fait, il est temps de me désactiver.
+Vous pourriez appuyer sur la touche Echap,
+mais vous ne pourriez réussir le défi qui va avec.
+PS: J'ai modifié votre char cette mission.\n
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -1897,11 +1912,15 @@ Appuyez sur Entrée pour commencer.""")
 		#"Pulsar"
 		self.pulsar -= 1
 		if self.pulsar == 0:
-			self.pulsar = 50
+			self.pulsar = 100
 			self.Joueur2.tir(0)
+			self.Joueur2.tir(math.pi/4)
 			self.Joueur2.tir(math.pi/2)
+			self.Joueur2.tir(3*math.pi/4)
 			self.Joueur2.tir(math.pi)
+			self.Joueur2.tir(-math.pi/4)
 			self.Joueur2.tir(-math.pi/2)
+			self.Joueur2.tir(-3*math.pi/4)
 		#Déplacement des Joueurs
 		for k in range(len(self.Joueurs)):
 			self.Joueurs[k].mouvement_char()
@@ -1925,16 +1944,34 @@ class Histoire10:
 		root.quickprint(self.terrain, [])
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10 (facultatif): Partager TkTank avec vos ami(e)s.")
 		#Affichage de la narration
-		root.display("Félicitation, " +root.nom +" !" +'\n\n'
-		+"PS: Je n'aurai jamais cru devoir en arriver là..." +'\n'
-		+"Devoir lancer ma copie de savegarde pour rester parfait..." +'\n'
-		+"Mais que dis-je, je suis déjà parfait, même si j'ai perdu." +'\n'
-		+"Mais j'avais pu être... plus-que-parfait!\n"
-		+"Soit dit en passant: merci d'avoir joué avec moi!\n\n"
-		+"Appuyez sur Echap pour revenir au Menu.")	
+		root.display("""Mission 42: La vie, l'univers, le reste
+...nous aussi nous sommes poussière d'étoiles...
+Vous avez choisi de persévérer et avez terminé le
+mode "un brin difficile" du mode Histoire de TkT4nk.
+Vous avez bien exploré le jeu et peut-être même dans
+son entièreté... mais ce que représente ce jeu
+et son joueur %s est bien maigre
+et ne représente qu'une infime partie du monde...
+Il reste temps à découvir, et jamais nous ne finirons
+cette exploration de notre Univers...
+Ma proposition est la suivante: quittez TkT4nk,
+et sortez prendre l'air! Découvrez les merveilles
+du monde extérieur, devenez explorateur, soyez curieux!
+C'est peut-être ce que aurait dû faire le développeur
+de ce jeu, plutôt que de programmer...
+Sinon, appuyez sur cette maudite touche Echap.
+La touche Entrée vous donnera accès aux crédits.""" %(root.nom) )	
 		
-	def start(self):
-		pass		
+	def start(self, event):
+		root.display("""Crédits: TkT4nk\n
+Un jeu de: UNG Harry
+Remerciments: M.Muller, pour la gestion des touches.
+Ma sœur pour les fautes de franais (ç ?)
+Et avec mes amis: merci d'avoir tester le jeu!\n
+Joueur (et surtout son PC): %s
+Boss: TkT4nk, P.U.L.S.A.R.
+Meilleurs jeux d'acteur, rien à redire)\n
+Le classique: (Merci d'avoir jouer!)² (^_^)Y""" %(root.nom) )			
 									
 """================Fin du mode 'Histoire"================"""
 
