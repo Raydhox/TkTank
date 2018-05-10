@@ -16,7 +16,7 @@
 
 #On import les modules nécessaires
 from tkinter import*
-import math, random, copy, socket
+import math, random, copy, pickle, socket
 
 #On crée une classe char
 class Char():
@@ -627,6 +627,23 @@ class Main():
 		self.terrain2.append("11111111111111111111111111")
 		self.terrain2.append("11111111111111111111111111")
 		self.terrain2.append("11111111111111111111111111")
+		
+		#Sauvegarde
+		try:
+			with open("save.tktank", "rb") as save:
+				save = pickle.Unpickler(save)
+				self.save = save.load()
+		except:
+			with open("save.tktank", "wb") as save:
+				save = pickle.Pickler(save)
+				self.save = [0]*6
+				save.dump(self.save)
+	
+	def sauvegarder(self):
+		#Sauvegarde
+		with open("save.tktank", "wb") as save:
+			save = pickle.Pickler(save)
+			save.dump(self.save)
 	
 	def display(self, message, k=0):
 		#On empêche l'accès au Menu pendant 1 seconde.
@@ -748,10 +765,15 @@ class Main():
 		#Si on clique sur un bouton:
 		#	On supprime le Menu...
 		#	...et on lance le mode de jeu choisis
-		if (event.x >= 140) and (event.x <= 380):
+		if (event.x >= 40) and (event.x <= 120):
+			if (event.y >= 40) and (event.y <= 120):
+				self.noclick()
+				self.main = Defis()
+				self.main.afficher()
+		elif (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire10()
+				self.main = Histoire()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -776,6 +798,59 @@ class Main():
 		self.fenetre.after(20, self.afficher)
 		
 
+class Defis:
+	
+	def __init__(self):		
+		#Les défis réussis sont représentés par un char
+		self.Joueurs = []
+		for k in range(6):
+			if root.save[k] == 0:
+				self.Joueurs.append( Char(root.canvas, 80, 80+80*k, 'NavajoWhite', ('', 0, 0, 'DarkBlue')) )
+				self.Joueurs.append( Char(root.canvas, 940, 80+80*k, 'NavajoWhite', ('', 0, 0, 'DarkBlue')) )
+			else:
+				self.Joueurs.append( Char(root.canvas, 80, 80+80*k, 'DarkGoldenRod', ('', 0, 0, 'DarkBlue')) )
+				self.Joueurs.append( Char(root.canvas, 940, 80+80*k, 'DarkGoldenRod', ('', 0, 0, 'DarkBlue')) )
+
+	def afficher(self):
+		#Affichage du terrain et des chars
+		root.quickprint(root.terrain0, [])
+		#Affichage de la narration
+		root.display("""Les défis...\n
+Aussi appelez succès, ils sont là pour augmenter
+la durée de vie d'un jeu. TkT4nk n'échappe pas à la règle.
+Voici une liste de défis assez simple, mais en venir à bout
+vous demandera tout de même un certain investissement.
+Les défis à terminer sont marqués par des chars
+de la même couleur que le fond du jeu (NavajoWhite)
+et les défis réussis, quant à eux, sont marqués
+par deux chars de la couleur du mur (DarkGoldenRod).
+Si vous êtes collectionneur, considérez cela
+comme une collection de stickeurs numériques.
+Enfin, il y a 10 types de personne:
+ceux qui comprendront qu'il n'y a que 10 misssions,
+et les autres... (Blagues privées, désolé)\n
+Appuyez sur Entrée pour accéder à la liste des Défis.""")	
+		
+	def start(self, event):
+		#Affichage du terrain et des chars
+		root.quickprint(root.terrain0, self.Joueurs)
+		#Mission
+		mission = root.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Défis: Relèverez-vous tous ces défis?")
+		#On affiche la liste des défis
+		negatif = root.canvas.create_text(500, 100, font="Time_New_Roman 15",
+										text="Négatif: Il n'y a pas de passage secret à la Mission0 du mode Histoire.")
+		binaire = root.canvas.create_text(500, 180, font="Time_New_Roman 15", text="Binaire: Terminer le mode Coop.")
+		octet = root.canvas.create_text(500, 260, font="Time_New_Roman 15", text="Octet: Terminer le mode Histoire.")
+		decimal = root.canvas.create_text(500, 340, font="Time_New_Roman 15",
+										text="Décimal: Utiliser la commande 'rm TkT4nk' et Vaincre le boss.")
+		duodecimal = root.canvas.create_text(500, 420, font="Time_New_Roman 15",
+										text="Duodécimal: Enchaîner 12 victoires consécutifs dans le mode Sans Fin.")
+		hexadecimal = root.canvas.create_text(500, 500, font="Time_New_Roman 15",
+										text="Héxadecimal: Livrer 16 batailles dans le mode Versus.")
+		#Astuce
+		astuce = root.canvas.create_text(520, 620, font="Comic_Sans_MS 10", fill="NavajoWhite",
+										text="Astuce: Pour recommencer, supprimer le fichier 'save.tktank' dans le répertoire du jeu")
+
 """================Chapitres du mode 'Histoire'================"""
 class Negatif:
 	
@@ -788,11 +863,30 @@ class Negatif:
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Négatif: VOUS AVEZ GAGNER")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Négatif: Vous avez gagné !!")
+		#=====Défis réussis!=====
+		root.save[0] = 1
+		root.sauvegarder()
 		#Affichage de la narration
-		root.display("")	
+		root.display("""Négatif: Il n'y avait pas de passage secret.\n
+Le seul truc que vous auriez réussi à faire,
+c'est de faire planter le jeu et me tuer avant l'heure.
+Mais le pire, c'est que cela montre à quel point
+vous me détestez... Mais puisque vous ne voulez
+pas me voir, appuyez sur cette ****** de touche Echap
+et repartons à zéro. Il faut juste que partions
+sur de bonnes bases et tout ira bien entre nous deux.
+Et voici votre sticker, je ne sais même ce que c'est,
+on m'a juste programmé pour dire ça... Et aussi:
+tuez moi, je ne veux plus vous voir.
+Allez, vous avez juste à appuyer sur une touche.\n
+Appuyez sur la touche Echap pour m'achever.
+Appuyez sur la touche Echap pour revenir au Menu.
+MAIS APPUYEZ SUR LA TOUCHE ECHAP *****!!
+Il faut vous le dire comment? Comme ca?:
+> sudo appuyez sur Echap""")	
 		
-	def start(self):
+	def start(self, event):
 		pass		
 	  
 class Histoire:
@@ -838,7 +932,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom) )
 		#Affichage de l'objectif du chapitre
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 0: Décimer l'ennemi.")
 		#Fin "Négatif"
-		self.terrain[15] = "11011111111111111111111111"
+		self.terrain[15] = "11111111101111111111111111"
 		#Evènements
 		self.fenetre.unbind('<Return>')
 		self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
@@ -866,7 +960,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom) )
 			root.main = Histoire1()
 			root.main.afficher()
 		#Si le Joueur trouve la zone secrète...
-		if (self.Joueur1.char_y >= 595):
+		if (self.Joueur1.char_y >= 598):
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
