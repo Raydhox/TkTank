@@ -557,6 +557,9 @@ class Main():
 		
 		#Nom du joueur
 		self.nom = socket.gethostname()
+		#Liste des missions du mode Histoire
+		self.signets = [Histoire, Histoire1, Histoire2, Histoire3, Histoire4, Histoire5,
+		Histoire6, Histoire7, Histoire8, Histoire9, Histoire0]
 		
 		#Mis en place du terrain0 sous forme d'une liste 'terrain0'
 		self.terrain0 = []
@@ -636,7 +639,7 @@ class Main():
 		except:
 			with open("save.tktank", "wb") as save:
 				save = pickle.Pickler(save)
-				self.save = [0]*6
+				self.save = [0]*7
 				save.dump(self.save)
 	
 	def sauvegarder(self):
@@ -759,7 +762,7 @@ class Main():
 	def noclick(self):
 		#Supprime les interactions de la souris.
 		self.canvas.unbind('<Button-1>')
-		self.canvas.unbind('<Button-3>')	
+		self.canvas.unbind('<Button-3>')
 		
 	def start(self, event):
 		#Si on clique sur un bouton:
@@ -773,7 +776,7 @@ class Main():
 		elif (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Histoire()
+				self.main = self.signets[self.save[-1]]()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -896,6 +899,9 @@ class Histoire:
 		self.terrain = copy.copy(root.terrain2)
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		#=====Signet=====
+		root.save[-1] = 0
+		root.sauvegarder()
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
@@ -995,6 +1001,10 @@ class Histoire1:
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
 		
+		#=====Signet=====
+		root.save[-1] = 1
+		root.sauvegarder()
+		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		self.Joueur2 = Ennemi(self.canvas, 920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'))
@@ -1020,8 +1030,8 @@ Le premier niveau se doit malheureusement d'être facile...
 Et en plus, je suis pris d'un élan de gentillesse
 -je sais, je sais, merci-; voici une information importante:
 dans le mode Histoire, les ennemis sont immunisés à
-toutes les balles ennemies. Vous seul(e) pouvez les abbattre.
-Le développeur a un peu foiré de ce côté là...\n		
+toutes les balles ennemies. Vous seul(e) pouvez les
+abbattre. Le développeur a un peu foiré de ce côté là...\n		
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -1086,6 +1096,10 @@ class Histoire2:
 		self.terrain = root.terrain2
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 2
+		root.sauvegarder()
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
@@ -1200,6 +1214,10 @@ class Histoire3:
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
 		
+		#=====Signet=====
+		root.save[-1] = 3
+		root.sauvegarder()
+		
 		#On crée le char
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		#On enregistre le Joueur dans une liste
@@ -1270,6 +1288,10 @@ class Histoire4:
 		self.terrain = root.terrain2
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 4
+		root.sauvegarder()
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
@@ -1386,6 +1408,10 @@ class Histoire5:
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
 		
+		#=====Signet=====
+		root.save[-1] = 5
+		root.sauvegarder()
+		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		self.Joueur2 = Ennemi(self.canvas, 920, 80, 'Red', ('Colonel (a 10 PV)', 920, 20, 'DarkRed'), 10)
@@ -1486,6 +1512,10 @@ class Histoire6:
 		self.terrain = root.terrain0
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 6
+		root.sauvegarder()
 
 		#Pour la boucle
 		self.password = "|"
@@ -1583,6 +1613,10 @@ class Histoire0:
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
 		
+		#=====Signet=====
+		root.save[-1] = 10
+		root.sauvegarder()
+		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		self.Joueur2 = Boss(self.canvas, 500, 300, 'DarkGoldenRod', ('TkT4nk - Hargne', 920, 620, 'NavajoWhite'), 80)
@@ -1670,11 +1704,18 @@ class HistoireFin:
 		self.terrain = root.terrain0
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 0
+		root.sauvegarder()
 
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10: Revenez me voir, de temps à autres...")
+		#=====Défis réussis!=====
+		root.save[2] = 1
+		root.sauvegarder()
 		#Affichage de la narration
 		root.display("""Fin: Félicitation, %s!\n
 Vous avez vaincu le méchant mais non moins parfait
@@ -1705,6 +1746,10 @@ class Histoire7:
 		self.terrain = root.terrain0
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 7
+		root.sauvegarder()
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
@@ -1790,6 +1835,10 @@ class Histoire8:
 		self.terrain = root.terrain2
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 8
+		root.sauvegarder()
 		
 		#On crée les chars		
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
@@ -1908,7 +1957,8 @@ Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 				self.Joueurs[k].ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
 			else:
 				self.Joueurs[k].ia( (self.Joueur2.char_x, self.Joueur2.char_y) )
-			self.Joueurs[k].miner({})
+			if self.Joueurs[k].mort == False:
+				self.Joueurs[k].miner({})
 		#Déplacement des robots + joueur
 		for k in range(len(self.Joueurs)):
 			self.Joueurs[k].mouvement_char()
@@ -1925,6 +1975,10 @@ class Histoire9:
 		self.terrain = root.terrain0
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 9
+		root.sauvegarder()
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Orange', (root.nom, 60, 20, 'Yellow'))
@@ -2032,11 +2086,18 @@ class Histoire10:
 		self.terrain = root.terrain0
 		self.fenetre = root.fenetre
 		self.canvas = root.canvas
+		
+		#=====Signet=====
+		root.save[-1] = 0
+		root.sauvegarder()
 
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10 (facultatif): Partager TkTank avec vos ami(e)s.")
+		#=====Défis réussis!=====
+		root.save[3] = 1
+		root.sauvegarder()
 		#Affichage de la narration
 		root.display("""Mission 42: La vie, l'univers, le reste
 ...nous aussi nous sommes poussière d'étoiles...
@@ -2061,7 +2122,7 @@ La touche Entrée vous donnera accès aux crédits.""" %(root.nom) )
 Un jeu de: UNG Harry
 Remerciments: M.Muller, pour la gestion des touches.
 Ma sœur pour les fautes de franais (ç ?)
-Et avec mes amis: merci d'avoir tester le jeu!\n
+Et avec mes amis: merci d'avoir testé le jeu!\n
 Joueur (et surtout son PC): %s
 Boss: TkT4nk, P.U.L.S.A.R.
 Meilleurs jeux d'acteur, rien à redire)\n
@@ -2079,10 +2140,10 @@ class SansFin():
 		self.canvas = root.canvas
 		
 		#On crée les chars
-		self.Joueur1 = Char(self.canvas, 80, 520, 'Yellow', ('Joueur', 980, 20, 'White'))
-		self.Joueur2 = Tank(self.canvas, 80, 80, 'Red', ('0rdi', 60, 20, 'DarkRed'), 1)
-		self.Joueur3 = Tank(self.canvas, 920, 80, 'LimeGreen', ('Ordi', 980, 620, 'DarkGreen'), 1)
-		self.Joueur4 = Tank(self.canvas, 920, 520, 'DodgerBlue', ('Ordi', 980, 620, 'DarkBlue'), 1)
+		self.Joueur1 = Char(self.canvas, 80, 520, 'Yellow', ('Joueur', 60, 620, 'White'))
+		self.Joueur2 = Tank(self.canvas, 80, 80, 'Red', ('Le feu feu', 60, 20, 'DarkRed'), 1)
+		self.Joueur3 = Tank(self.canvas, 920, 80, 'LimeGreen', ('Le verre vert', 920, 20, 'DarkGreen'), 1)
+		self.Joueur4 = Tank(self.canvas, 920, 520, 'DodgerBlue', ('Le bleu bleuté', 920, 620, 'DarkBlue'), 1)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
@@ -2094,17 +2155,16 @@ class SansFin():
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Comment jouer?\n"
-		+"Flèches_directionnelles / zqsd / wasd : se déplacer\n"
-		+"Click gauche : Tirer\n"
-		+"Click droit : Poser une mine\n"
-		+'\n'
-		+"Le mode Sans Fin est un mode... Sans Fin.\n"
-		+"Chaque fois que vous perdez ou gagnez,\n"
-		+"vous recommencez immédiatement.\n"
-		+"Les Ennemis peuvent s'entretuer et possèdent:\n"
-		+"(Nombre de Victoire(s)) PV\n\n"
-		+"Appuez sur Entrée pour commencer")
+		root.display("""Comment jouer?\n"
+Flèches_directionnelles / zqsd / wasd : se déplacer
+Click gauche : Tirer
+Click droit : Poser une mine
+Le mode Sans Fin est un mode... Sans Fin.
+Chaque fois que vous perdez ou gagnez,
+vous recommencez immédiatement.
+Les Ennemis peuvent s'entretuer et possèdent:
+(Nombre de Victoire(s)) PV\n
+Appuez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2159,6 +2219,10 @@ class SansFin():
 			#PV des Ennemis
 			for var in range(1, 3):
 				self.Joueurs[var].pv = self.score["Victoire"]
+		if (self.score["Défaite"] == 0) and (self.score["Victoire"] == 12):
+			#=====Défis réussis!=====
+			root.save[4] = 1
+			root.sauvegarder()
 				
 	def boucle(self):
 		"""===Boucle principale du jeu.==="""
@@ -2206,18 +2270,18 @@ class Coop:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Joueur1, voici les touches:\n"
-		+"Se déplacer : zqsd/wasd\n"
-		+"Tirer (selon un cercle trigo, g correspondant à -pi/2):\n"
-		+"rty\n"
-		+"fgh\n"
-		+"vbn\n"
-		+"Poser une mine : espace\n"
-		+'\n'#=========================================================#
-		+"Joueur2, voici les touches:\n"
-		+"Se déplacer : Flèches directionnelles\n"
-		+"Tirer : Click gauche\n"
-		+"Poser une mine : Click droit\n\n")
+		root.display("""Tuto:\n
+Joueur1, voici les touches\n
+Se déplacer : zqsd/wasd
+Tirer (selon un cercle trigo, g correspondant à -pi/2):
+rty
+fgh
+vbn\n
+Poser une mine : espace
+Joueur2, voici les touches:
+Se déplacer : Flèches directionnelles
+Tirer : Click gauche
+Poser une mine : Click droit""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2281,9 +2345,9 @@ class Coop1:
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
 		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
-		self.Joueur3 = Char(self.canvas, 80, 80, 'LimeGreen', ('Ennemi', 60, 20, 'DarkGreen'))
-		self.Joueur4 = Char(self.canvas, 80, 520, 'Yellow', ('Ennemi', 60, 620, 'White'))
-		self.Joueur5 = Char(self.canvas, 500, 300, 'Green', ('Ennemi', 500, 620, 'DarkGreen'))
+		self.Joueur3 = Char(self.canvas, 80, 80, 'LimeGreen', ('Alcane', 60, 20, 'DarkGreen'))
+		self.Joueur4 = Char(self.canvas, 80, 520, 'Yellow', ('Alcène', 60, 620, 'White'))
+		self.Joueur5 = Char(self.canvas, 500, 300, 'Green', ('Alcyne', 500, 620, 'DarkGreen'))
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
 
@@ -2294,11 +2358,13 @@ class Coop1:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Le mode coopération (Coop, pour les intimes)\n"
-		+"comprend 6 missions.\n"
-		+"Les ennemis peuvent, dans ce mode, s'entretuer.\n"
-		+"Si l'un des deux joueurs meurt, vous recommencez.\n\n"
-		+"Bonne chance, et amusez-vous bien! ;-)")
+		root.display("""Mission 1/6: Commençons\n
+Le mode coopération (Coop, pour les intimes)
+comprend 6 missions.
+Les ennemis peuvent, dans ce mode, s'entretuer.
+Si l'un des deux joueurs meurt, vous recommencez.
+Bonne chance, et amusez-vous bien! ;-)\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2373,9 +2439,9 @@ class Coop2:
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
 		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
-		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Colonel  (a 10 PV)', 60, 20, 'DarkGreen'), 10)
-		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Colonel  (a 10 PV)', 60, 620, 'White'), 10)
-		self.Joueur5 = Tank(self.canvas, 500, 300, 'Green', ('Colonel  (a 10 PV)', 500, 620, 'DarkGreen'), 10)
+		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Ethane  (a 10 PV)', 60, 20, 'DarkGreen'), 10)
+		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Ethène  (a 10 PV)', 60, 620, 'White'), 10)
+		self.Joueur5 = Tank(self.canvas, 500, 300, 'Green', ('Ethyne  (a 10 PV)', 500, 620, 'DarkGreen'), 10)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
 
@@ -2386,8 +2452,10 @@ class Coop2:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Ce niveau sera semblable au précedént.\n"
-		"Cependant, les ennemis auront cette fois 10 PV.")
+		root.display("""Mission 2/6: Complexe\n
+Ce niveau sera semblable au précedént.
+Cependant, les ennemis auront cette fois 10 PV.
+Ils devront être touchés 10 fois pour être vaincu.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2464,9 +2532,9 @@ class Coop3:
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 920, 80, 'DodgerBlue', ('Joueur1', 980, 20, 'DarkBlue'))
 		self.Joueur2 = Char(self.canvas, 920, 520, 'Red', ('Joueur2', 980, 620, 'DarkRed'))
-		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Clone  (a 10 PV)', 60, 20, 'DarkGreen'), 60)
-		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Boss  (a 60 PV)', 60, 620, 'White'), 60)
-		self.Joueur5 = Tank(self.canvas, 500, 300, 'Green', ('Clone  (a 60 PV)', 920, 620, 'DarkGreen'), 60)
+		self.Joueur3 = Tank(self.canvas, 80, 80, 'LimeGreen', ('Cosinus  (a 60 PV)', 60, 20, 'DarkGreen'), 60)
+		self.Joueur4 = Tank(self.canvas, 80, 520, 'Yellow', ('Cotangente  (a 60 PV)', 60, 620, 'White'), 60)
+		self.Joueur5 = Tank(self.canvas, 500, 300, 'Green', ('Cosécante  (a 60 PV)', 920, 620, 'DarkGreen'), 60)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4, self.Joueur5]
 
@@ -2477,10 +2545,11 @@ class Coop3:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Dans les deux niveaux qui suivent,\n"
-		+"il faut que chaque Joueur atteigne la croix de sa couleur.\n"
-		+"Attention cependant! Ces ennemis ont 60 PVs\n\n"
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 3/6: Coopérer\n
+Dans les deux niveaux qui suivent,
+il faut que chaque Joueur atteigne la croix de sa couleur.
+Attention cependant! Ces ennemis ont 60 PVs.\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2575,10 +2644,11 @@ class Coop4:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Cette fois, vous devez faire attention au temps...\n"
-		+"Pas d'inquiétude, les ennemis ne sont plus que deux,\n"
-		+"et n'ont de nouveaux plus que 10 PV!\n\n"
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 4/6: Contre-la-montre\n
+Cette fois, vous devez faire attention au temps...
+Pas d'inquiétude, les ennemis ne sont plus que deux,
+et n'ont de nouveaux plus que 10 PV!\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2727,11 +2797,13 @@ class Coop5:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("La pénultième mission: 2 VS 1\n"
-		+"ATTENTION!: Quand le Joueur1 se déplace,\n"
-		+"le Joueur2 aussi. Quand le Joueur2 tir ou pose une mine\n"
-		+"le Joueur1 fait de même.\n\n"
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 5/6: Se coordonner\n
+La pénultième mission, celle où il faut se coordoner.
+ATTENTION!: Quand le Joueur1 se déplace,
+le Joueur2 aussi.
+Quand le Joueur2 tir ou pose une mine,
+le Joueur1 fait de même.\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2766,7 +2838,7 @@ class Coop5:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = FinCoop()
+			root.main = Coop6()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -2819,9 +2891,11 @@ class Coop6:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Dernière mission... ça va être cocasse!\n"
-		+"ATTENTION!: le Joueur1 est à droite et le Joueur2, à gauche.\n\n"
-		+"Appuyez sur Entrée pour commencer.")
+		root.display("""Mission 6/6: Confiance !
+Dernière mission... ça va être cocasse!
+ATTENTION!: le Joueur1 est à droite et le Joueur2, à gauche.
+Cela peut-être utile, ne sait-on jamais...\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2856,7 +2930,7 @@ class Coop6:
 			#Mission accomplie: au suivant!
 			self.encore = False
 			root.noclick()
-			root.main = FinCoop()
+			root.main = CoopFin()
 			root.main.afficher()
 				
 	def boucle(self):
@@ -2885,7 +2959,7 @@ class Coop6:
 		if self.encore:
 			self.fenetre.after(20, self.boucle)	
 			
-class FinCoop:
+class CoopFin:
 	
 	def __init__(self):
 		#Variables globales
@@ -2897,13 +2971,16 @@ class FinCoop:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission i (obligatoire): Continuez de vous amuser!")
+		#=====Défis réussis!=====
+		root.save[1] = 1
+		root.sauvegarder()
 		#Affichage de la narration
-		root.display("Félicitation² !!" +'\n\n'
-		+"Vous avez réussi les 5 niveaux!\n"
-		+"Vous formez un excellent duo!\n\n"
-		+"Appuyez sur Echap pour revenir au Menu.")	
+		root.display("""Félicitation² !!\n
+Vous avez réussi les 6 missions!
+Vous formez un excellent duo!\n
+Appuyez sur Echap pour revenir au Menu.""")	
 		
-	def start(self):
+	def start(self, event):
 		pass			
 """================FinCoopération================"""
 
@@ -2944,18 +3021,17 @@ class Versus():
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("Joueur1, voici les touches:\n"
-		+"Se déplacer : zqsd/wasd\n"
-		+"Tirer (selon un cercle trigo, g correspondant à -pi/2):\n"
-		+"rty\n"
-		+"fgh\n"
-		+"vbn\n"
-		+"Poser une mine : espace\n"
-		+'\n'#=========================================================#
-		+"Joueur2, voici les touches:\n"
-		+"Se déplacer : Flèches directionnelles\n"
-		+"Tirer : Click gauche (Mais seulement 8 angles possibles...)\n"
-		+"Poser une mine : Click droit\n\n")
+		root.display("""Joueur1, voici les touches\n
+Se déplacer : zqsd/wasd
+Tirer (selon un cercle trigo, g correspondant à -pi/2):
+rty
+fgh
+vbn\n
+Poser une mine : espace
+Joueur2, voici les touches:
+Se déplacer : Flèches directionnelles
+Tirer : Click gauche (Mais seulement 8 angles possibles...)
+Poser une mine : Click droit""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2999,6 +3075,10 @@ class Versus():
 			#Affichage
 			printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
 								   text="Victoire(s) Joueur 1: "+str(self.score["J1"]))
+		if (self.score["J1"] + self.score["J2"] == 16):
+			#=====Défis réussis!=====
+			root.save[5] = 1
+			root.sauvegarder()
 				
 				
 	def boucle(self):
