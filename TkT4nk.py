@@ -2155,7 +2155,7 @@ class SansFin():
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Comment jouer?\n"
+		root.display("""Comment jouer?\n
 Flèches_directionnelles / zqsd / wasd : se déplacer
 Click gauche : Tirer
 Click droit : Poser une mine
@@ -3021,17 +3021,19 @@ class Versus():
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Joueur1, voici les touches\n
+		root.display("""Joueur1, voici les touches:
 Se déplacer : zqsd/wasd
 Tirer (selon un cercle trigo, g correspondant à -pi/2):
 rty
 fgh
-vbn\n
-Poser une mine : espace
+vbn
+Poser une mine : espace\n
 Joueur2, voici les touches:
 Se déplacer : Flèches directionnelles
 Tirer : Click gauche (Mais seulement 8 angles possibles...)
-Poser une mine : Click droit""")
+Poser une mine : Click droit\n
+Le Joueur 1 est à droite et le Joueur 2, à gauche.
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
