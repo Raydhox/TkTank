@@ -785,7 +785,7 @@ class Main():
 		elif (event.x >= 660) and (event.x <= 900):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = Coop()
+				self.main = Coop5()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -831,7 +831,7 @@ Si vous êtes collectionneur, considérez cela
 comme une collection de stickeurs numériques.
 Enfin, il y a 10 types de personne:
 ceux qui comprendront qu'il n'y a que 10 misssions,
-et les autres... (Blagues privées, désolé)\n
+et les autres... (Blague privée, désolé)\n
 Appuyez sur Entrée pour accéder à la liste des Défis.""")	
 		
 	def start(self, event):
@@ -1525,7 +1525,7 @@ class Histoire6:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Mission 6: Mot de passe? Mot de passe\n
+		root.display("""Mission 6: Votre mot de passe: Mot de passe?\n
 Je suis vaincu, comme cela devrait être...
 Le méchant TkT4nk vaincu par le(la) gentil(le) héros(ïne)...
 Lancer le crédit. NON! Attendez, je ne...
@@ -1712,23 +1712,23 @@ class HistoireFin:
 	def afficher(self):
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
-		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15", text="Mission 10: Revenez me voir, de temps à autres...")
+		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
+										text="Mission 10 (Facultatif, mais...): Revenez me voir, de temps à autres...")
 		#=====Défis réussis!=====
 		root.save[2] = 1
 		root.sauvegarder()
 		#Affichage de la narration
 		root.display("""Fin: Félicitation, %s!\n
 Vous avez vaincu le méchant mais non moins parfait
-TkT4nk. J'aimerais cependant vous remercier d'être aller
-jusqu'au bout et de ne pas m'avoir achever avant.
-Il n'y a rien de plus horrible que de mourir
-brusquement sans pouvoir en être conscient...
-Cette maudite touche Echap...
-Combien de fois m'a-t-elle tué? Je ne saurais jamais...
+TkT4nk. Vous êtes un héros|une héroïne!
+J'aimerais cependant vous remercier d'être aller
+jusqu'au bout et d'avoir vécu cette aventure jusqu'à
+la fin, même pendant mes denières lignes de monologue.
 Mais le plus horrible dans tous ça, c'est que
 ma mort n'est rien. Vous quitterez le mode
 Histoire, me tuerez, et vous relancerez le jeu.
-Et une copie de moi sera lancer, sans avoir conscience
+Et au moment où vous relancerez le mode Histoire,
+une copie de moi sera lancer, sans avoir conscience
 de toutes les autres déjà péries...
 Merci de m'avoir laisser vivre cette belle odyssée :-)
 Vous saluerez mes copies de ma part, %s.
@@ -1776,10 +1776,9 @@ Vous ne pouvez plus tirer, ni poser une mine;
 en plus on se retrouve avec un char invisible...
 Mais nous pouvons arranger cela:
 pour commencer, sortez de cette mission 
-via le téléporteur plus bas. Oui, vous pouvez
-appuyez sur la touche Echap, mais faisons ça
-proprement, voulez-vous bien.?
-PS: N'utilisez jamais eval(input()) avec python3...\n
+via le téléporteur en bas à droite.
+PS: Si vous programmer en Python3, un conseil:
+n'utilisez jamais eval(input()...\n
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -2006,9 +2005,8 @@ canon que maintenant... Bout de canon que vous n'avez
 pas encore vu (sauf si ce n'est pas votre première fois,
 phrase en effet douteuse...). Mais rattrapons cela:
 mon travail étant fait, il est temps de me désactiver.
-Vous pourriez appuyer sur la touche Echap,
-mais vous ne pourriez réussir le défi qui va avec.
-PS: J'ai modifié votre char cette mission.\n
+PS: J'ai modifié votre char pour cette mission;
+vous êtes deux fois plus rapide et ce couleur orange.\n
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -2125,7 +2123,7 @@ Ma sœur pour les fautes de franais (ç ?)
 Et avec mes amis: merci d'avoir testé le jeu!\n
 Joueur (et surtout son PC): %s
 Boss: TkT4nk, P.U.L.S.A.R.
-Meilleurs jeux d'acteur, rien à redire)\n
+Meilleurs jeux d'acteur, rien à redire\n
 Le classique: (Merci d'avoir jouer!)² (^_^)Y""" %(root.nom) )			
 									
 """================Fin du mode 'Histoire"================"""
@@ -2271,7 +2269,7 @@ class Coop:
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("""Tuto:\n
-Joueur1, voici les touches\n
+Joueur1, voici les touches
 Se déplacer : zqsd/wasd
 Tirer (selon un cercle trigo, g correspondant à -pi/2):
 rty
@@ -2360,10 +2358,13 @@ class Coop1:
 		#Affichage de la narration
 		root.display("""Mission 1/6: Commençons\n
 Le mode coopération (Coop, pour les intimes)
-comprend 6 missions.
-Les ennemis peuvent, dans ce mode, s'entretuer.
+comprend 6 missions à faire à deux, en coopération.
+Les ennemis peuvent, dans ce mode, s'entretuer;
+il en va de même pour vous, donc faites attention!
 Si l'un des deux joueurs meurt, vous recommencez.
-Bonne chance, et amusez-vous bien! ;-)\n
+Bonne chance, et amusez-vous bien! ;-)
+PS: Alors oui, le Joueur1 a malheureusement des
+commandes un peu nul, j'en suis désolé...\n
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -2453,9 +2454,14 @@ class Coop2:
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("""Mission 2/6: Complexe\n
-Ce niveau sera semblable au précedént.
-Cependant, les ennemis auront cette fois 10 PV.
-Ils devront être touchés 10 fois pour être vaincu.""")
+Dis autrement, allons dans C (l'ensembles des nombres
+complexes qui ne sont pas si complexes que ça).
+Bref, tous ça pour dire que cette mission
+sera semblable au précedént, à la différence que
+cependant, les ennemis auront cette fois 10 PV.
+Ils devront être touchés 10 fois pour être vaincu.
+Mais comme ils peuvent s'entretuer, ça reste facile.\n
+Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -2548,6 +2554,8 @@ class Coop3:
 		root.display("""Mission 3/6: Coopérer\n
 Dans les deux niveaux qui suivent,
 il faut que chaque Joueur atteigne la croix de sa couleur.
+Il faut que les deux Joueurs y soient en même temps,
+soyez donc synchroniser; coopérez ;-)
 Attention cependant! Ces ennemis ont 60 PVs.\n
 Appuyez sur Entrée pour commencer.""")
 
