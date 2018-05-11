@@ -880,13 +880,12 @@ pas me voir, appuyez sur cette ****** de touche Echap
 et repartons à zéro. Il faut juste que partions
 sur de bonnes bases et tout ira bien entre nous deux.
 Et voici votre sticker, je ne sais même ce que c'est,
-on m'a juste programmé pour dire ça... Et aussi:
-tuez moi, je ne veux plus vous voir.
-Allez, vous avez juste à appuyer sur une touche.\n
+on m'a juste programmé pour dire ça...
+Et aussi: tuez moi, je ne veux plus vous voir.\n
 Appuyez sur la touche Echap pour m'achever.
 Appuyez sur la touche Echap pour revenir au Menu.
 MAIS APPUYEZ SUR LA TOUCHE ECHAP *****!!
-Il faut vous le dire comment? Comme ca?:
+Il faut vous le dire comment? Comme ça?:
 > sudo appuyez sur Echap""")	
 		
 	def start(self, event):
