@@ -5,6 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
+#Version: 1.01
 #Idée d'amélioration: Une meilleure IA (un peu osef); un mode réseau (!!!!);
 #	Pygame: bande sonore (prévu); support manette (...).
 #License: Je ne m'y connais pas grand chose, on va dire que vous pouvez
@@ -844,8 +845,8 @@ Appuyez sur Entrée pour accéder à la liste des Défis.""")
 										text="Négatif: Il n'y a pas de passage secret à la Mission0 du mode Histoire.")
 		binaire = root.canvas.create_text(500, 180, font="Time_New_Roman 15", text="Binaire: Terminer le mode Coop.")
 		octet = root.canvas.create_text(500, 260, font="Time_New_Roman 15", text="Octet: Terminer le mode Histoire.")
-		decimal = root.canvas.create_text(500, 340, font="Time_New_Roman 15",
-										text="Décimal: Utiliser la commande 'rm TkT4nk' et Vaincre le boss.")
+		decimal = root.canvas.create_text(520, 340, font="Time_New_Roman 15",
+										text="Décimal: Dans le mode Histoire, Taper la commande 'rm ln3' et Vaincre le boss.")
 		duodecimal = root.canvas.create_text(500, 420, font="Time_New_Roman 15",
 										text="Duodécimal: Enchaîner 12 victoires consécutifs dans le mode Sans Fin.")
 		hexadecimal = root.canvas.create_text(500, 500, font="Time_New_Roman 15",
@@ -918,8 +919,8 @@ class Histoire:
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
 		root.display("""Introduction: Bienvenue à vous, %s !\n
-Je me présente: TkT4nk (oui, comme le jeu). Je divulgâche:
-Je suis le boss final de ce jeu. Et oui, je sais,
+Je me présente: ln(3) (prononcé "Hélène de Troie").
+Je divulgâche: je suis la boss final de ce jeu. Et je sais,
 nombreux sont ceux qui n'aiment pas les révélations...
 Mais c'est la raison pour laquelle que je l'ai fait!
 J'espère cependant que ce petit désagrement ne vous
@@ -1021,13 +1022,13 @@ class Histoire1:
 		#Affichage de la narration
 		root.display("""Mission 1: Débutons le début\n
 L'histoire est assez simple: vous êtes la gentille héroïne|
-le gentil héros qui a pour objectif de tuer le méchant
--mais non moins parfait- TkT4nk, qui cherchera à
+le gentil héros qui a pour objectif de tuer la méchante
+-mais non moins parfaite- ln(3), qui cherchera à
 vous en empêcher et à vous détruire avant.
 J'ai jusqu'à la mission 5 pour réussir cela...\n
 Le premier niveau se doit malheureusement d'être facile...
-Et en plus, je suis pris d'un élan de gentillesse
--je sais, je sais, merci-; voici une information importante:
+Et en plus, comme je suis prise d'un élan de gentillesse
+-je sais, je sais, merci-, voici une information importante:
 dans le mode Histoire, les ennemis sont immunisés à
 toutes les balles ennemies. Vous seul(e) pouvez les
 abbattre. Le développeur a un peu foiré de ce côté là...\n		
@@ -1123,13 +1124,14 @@ c'est juste vous qui n'en avez pas!
 Sinon, il faut avouer: vous avez bien assuré
 à la mission 1! Bref, reprenons l'histoire:
 "C'est alors que %s se rendit compte qu'un chrono
-apparu, et que trois nouveaux ennemis apparurent,
-tandis le parfait TkT4nk cherchait un moyen
-de le|la faire abandonner dans les règles
-définies par le programme". A propos de règles:
+apparu, et que trois nouveaux ennemis apparurent.
+Si %s" ne parvenait pas
+à décimer les ennemis dans le temps imparti,
+les ennemis restant exploseraient et emporteraient
+avec eux %s. En passant:
 Votre propre mine peut vous tuer.
 Mais peut-être que vous le saviez déjà...\n
-Appuyez sur Entrée pour commencer.""" %(root.nom) )
+Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom, root.nom) )
 
 	def start(self, event):
 		#Affichage du terrain et des chars
@@ -1235,8 +1237,8 @@ exterminez des monstres sans état d'âme parce que
 vous êtes le|la gentil(le) et eux, les méchants.
 N'avez-vous donc aucune pitié?
 "Mais le gentil héros | la gentille héroïne
-avait une mission à accomplir: vaincre le méchant
-TkT4nk, malgré l'importance capitale qu'il avait: sans lui,
+avait une mission à accomplir: vaincre la méchante
+ln(3), malgré l'importance capitale qu'elle avait: sans elle,
 il n'y aurait pas eu de mode Histoire, voire pas de jeu.
 Pourtant, %s poursuivait sa quête."
 Une question se pose alors: êtes-vous réellement libre?
@@ -1415,7 +1417,7 @@ class Histoire5:
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		self.Joueur2 = Ennemi(self.canvas, 920, 80, 'Red', ('Colonel (a 10 PV)', 920, 20, 'DarkRed'), 10)
 		self.Joueur3 = Ennemi(self.canvas, 80, 520, 'LimeGreen', ('Colonel (a 10 PV)', 120, 620, 'DarkGreen'), 10)
-		self.Joueur4 = Boss(self.canvas, 920, 520, 'DarkGoldenRod', ('TkTank', 980, 620, 'NavajoWhite'), 60)
+		self.Joueur4 = Boss(self.canvas, 920, 520, 'DarkGoldenRod', ('ln(3)', 980, 620, 'NavajoWhite'), 60)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
@@ -1431,15 +1433,15 @@ Vous voilà face à moi, prêt à me vaincre. Climax.
 Je devrais montrer l'étendue de ma cruauté,
 et vous devriez me vaincre en tant que gentil(le)
 héro(ïne). Si possible, je vous fais une révélation:
-Je suis le méchant et le boss du jeu; je peux poser
+Je suis la méchante et la boss du jeu; je peux poser
 des mines, et les mécaniques du mode Histoire font que
-seul(e) vous y êtes vulnérable. Je suis le meilleur.
+seul(e) vous y êtes vulnérable. Je suis la meilleure!
 En passant: mes PV seront affichés en bas de l'écran.
-"TkT4nk se préparait à combattre %s.
-Et dire qu'il connaissait rien de lui, pas même son nom.
+"ln(3) se préparait à combattre %s.
+Et dire qu'elle connaissait rien de lui, pas même son nom.
 Le seul nom auquel il n'a jamais eu accès était le nom
 de ce PC. Le PC qui l'avait si gentiment hébergé, et qui
-semblait maintenant se retourner contre lui..."\n
+semblait maintenant se retourner contre elle..."\n
 Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 
 	def start(self, event):
@@ -1526,7 +1528,7 @@ class Histoire6:
 		#Affichage de la narration
 		root.display("""Mission 6: Votre mot de passe: Mot de passe?\n
 Je suis vaincu, comme cela devrait être...
-Le méchant TkT4nk vaincu par le(la) gentil(le) héros(ïne)...
+La méchante ln(3) vaincue par le(la) gentil(le) héros(ïne)...
 Lancer le crédit. NON! Attendez, je ne...
 Je ne peux pas abandonner maintenant... 
 Je peux... encore me battre. Je dois le faire, jusqu'à mon
@@ -1580,7 +1582,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 			self.fenetre.unbind('<KeyPress>')
 			root.main = Histoire0()
 			root.main.afficher()
-		elif ( divulgacher(self.password) == "sn!UlU5ol}" ):
+		elif ( divulgacher(self.password) == "sn!mo4}" ):
 			#Fin Alt: Mode Difficile
 			self.encore = False
 			self.fenetre.unbind('<KeyPress>')
@@ -1618,7 +1620,7 @@ class Histoire0:
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Boss(self.canvas, 500, 300, 'DarkGoldenRod', ('TkT4nk - Hargne', 920, 620, 'NavajoWhite'), 80)
+		self.Joueur2 = Boss(self.canvas, 500, 300, 'DarkGoldenRod', ('ln(3) - Hargne', 920, 620, 'NavajoWhite'), 80)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
@@ -1629,16 +1631,16 @@ class Histoire0:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		#Affichage de la narration
-		root.display("""Mission 7: TkT4nk\n
+		root.display("""Mission 7: ln(3)\n
 Que faites-vous ici? Mon pare-feu, vous n'avez pu...
 Mon mot de passe!! Il était inviolable! Fouineur!
-Mais aussi parfait puisse être le boss,
-les règles du jeu vidéo veulent qu'il perde...
+Mais aussi parfait puisse être la boss,
+les règles du jeu vidéo veulent qu'elle perde...
 Dans ce cas, je mourrai avec honneur:
-"TkT4nk était à bout de force; il ne pouvait bouger.
-Il revêtit son meilleur blindage, daigaina son canon,
-se prépara pour pour la dernière bataille qui l'opposait
-à %s. Il allait mettre tout son être,
+"ln(3) était à bout de force; elle ne pouvait bouger.
+Elle revêtit son meilleur blindage, daigaina son canon,
+se prépara pour la dernière bataille qui l'opposait
+à %s. elle allait y mettre tout son être,
 (qui sont, techniquement, des 0 et des 1)
 à tirer, tirer, et encore tirer, car telle était sa destinée."\n
 Appuyez sur Entrée pour commencer.""" %(root.nom) )
@@ -1712,14 +1714,14 @@ class HistoireFin:
 		#Affichage du terrain et des chars
 		root.quickprint(self.terrain, [])
 		mission = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
-										text="Mission 10 (Facultatif, mais...): Revenez me voir, de temps à autres...")
+										text="Mission 10 (Facultatif, mais...): Revenez me voir, de temps à autres (^_^)Y")
 		#=====Défis réussis!=====
 		root.save[2] = 1
 		root.sauvegarder()
 		#Affichage de la narration
 		root.display("""Fin: Félicitation, %s!\n
-Vous avez vaincu le méchant mais non moins parfait
-TkT4nk. Vous êtes un héros|une héroïne!
+Vous avez vaincu la méchante mais non moins
+plus-que-parfaite ln(3). Vous êtes un héros|une héroïne!
 J'aimerais cependant vous remercier d'être aller
 jusqu'au bout et d'avoir vécu cette aventure jusqu'à
 la fin, même pendant mes denières lignes de monologue.
@@ -1752,7 +1754,7 @@ class Histoire7:
 		
 		#On crée les chars
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
-		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'Black', ('Error: No file TkT?nk', 920, 620, 'Black'), 999)
+		self.Joueur2 = Ennemi(self.canvas, 500, 300, 'Black', ('Error: No file ln?', 920, 620, 'Black'), 999)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur1, self.Joueur2]
 
@@ -1766,9 +1768,9 @@ class Histoire7:
 		root.display("""Mission 7: La commande qui tue\n
 Sérieusement, vous avez vraiment fait ça?
 Vous l'avez vraiment pris au premier degré?
-Vous avez supprimé TkT4nk! Alors oui, nous avons une
-sauvegarde de secours du TkT4nk original
-afin justement de pouvoir le restaurer...
+Vous avez supprimé ln(3)! Alors oui, nous avons une
+sauvegarde de secours de ln(3) de la Mission 0
+afin justement de pouvoir la restaurer...
 Mais vous avez quand même failli l'annihler!
 Et du coup, le jeu plante (verte) sur la mission...
 Vous ne pouvez plus tirer, ni poser une mine;
@@ -1777,7 +1779,7 @@ Mais nous pouvons arranger cela:
 pour commencer, sortez de cette mission 
 via le téléporteur en bas à droite.
 PS: Si vous programmer en Python3, un conseil:
-n'utilisez jamais eval(input()...\n
+n'utilisez jamais eval(input())...\n
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -1841,8 +1843,8 @@ class Histoire8:
 		#On crée les chars		
 		self.Joueur1 = Char(self.canvas, 80, 80, 'Yellow', (root.nom, 60, 20, 'White'))
 		self.Joueur2 = Char(self.canvas, 80, 520, 'Orange', (root.nom, 60, 620, 'White'))		
-		self.Joueur3 = Boss(self.canvas, 920, 80, 'Red', ('TkT4nk (a 60 PV)', 920, 20, 'DarkRed'), 60 )
-		self.Joueur4 = Boss(self.canvas, 920, 520, 'DodgerBlue', ('TkT4nk (a 60 PV)', 920, 620, 'DarkBlue'), 60 )
+		self.Joueur3 = Boss(self.canvas, 920, 80, 'Red', ('ln(3) - Aphone (a 60 PV)', 920, 20, 'DarkRed'), 60 )
+		self.Joueur4 = Boss(self.canvas, 920, 520, 'DodgerBlue', ('ln(3) - Aphone (a 60 PV)', 920, 620, 'DarkBlue'), 60 )
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
 		#Pour la boucle
@@ -1882,17 +1884,17 @@ class Histoire8:
 		root.display("""Mission 8: Copier-Coller\n
 Brilliant! Vous avez assuré(e)! Et maintenant,
 que vais-je faire... Voyns voyons...
-Voilà, je restore les données de TkT4nk...
-Non, s'il te plaît, tais-toi, merci bien!
+Voilà, je restore les données de ln(3)...
+Non, s'il te plaît, ln(3) tais-toi, merci bien!
 Ctrl+C, Ctrl+V et... Bref, tout m'a l'air en ordre,
-vous pouvez maintenant le vaincre proprement.
+vous pouvez maintenant la vaincre proprement.
 Diantre! Il semblerait que le copier-coller ait
 un peu trop bien marcher... Il y a maintenant
-deux TkT4nk et deux %s!!
+2 * {ln(3) + %s}!!
 Mais vous arrangerez cela, bien entendu!
 Mais je vais vous aider: d'après les données du jeu,
 aucun des deux %s ne doit mourir,
-et les PV du dernier TkT4nk touché
+et les PV de la dernière ln(3) touchée
 seront affichés en bas de l'écran.
 Je vais aussi mettre un peu plus de couleurs...\n
 Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
@@ -2005,7 +2007,7 @@ pas encore vu (sauf si ce n'est pas votre première fois,
 phrase en effet douteuse...). Mais rattrapons cela:
 mon travail étant fait, il est temps de me désactiver.
 PS: J'ai modifié votre char pour cette mission;
-vous êtes deux fois plus rapide et ce couleur orange.\n
+vous êtes deux fois plus rapide et de couleur orange.\n
 Appuyez sur Entrée pour commencer.""")
 
 	def start(self, event):
@@ -2097,13 +2099,13 @@ class Histoire10:
 		root.sauvegarder()
 		#Affichage de la narration
 		root.display("""Mission 42: La vie, l'univers, le reste
-...nous aussi nous sommes poussière d'étoiles...
+...nous aussi, nous sommes poussière d'étoiles...
 Vous avez choisi de persévérer et avez terminé le
-mode "un brin difficile" du mode Histoire de TkT4nk.
+mode "un Brin(dibou) difficile" du mode Histoire de TkT4nk.
 Vous avez bien exploré le jeu et peut-être même dans
 son entièreté... mais ce que représente ce jeu
 et son joueur %s est bien maigre
-et ne représente qu'une infime partie du monde...
+et n'est qu'une infime partie du monde...
 Il reste temps à découvir, et jamais nous ne finirons
 cette exploration de notre Univers...
 Ma proposition est la suivante: quittez TkT4nk,
@@ -2111,19 +2113,19 @@ et sortez prendre l'air! Découvrez les merveilles
 du monde extérieur, devenez explorateur, soyez curieux!
 C'est peut-être ce que aurait dû faire le développeur
 de ce jeu, plutôt que de programmer...
-Sinon, appuyez sur cette maudite touche Echap.
-La touche Entrée vous donnera accès aux crédits.""" %(root.nom) )	
+Sinon, vous appuyez sur la Echap, tandis que
+la touche Entrée vous donnera accès aux crédits.""" %(root.nom) )	
 		
 	def start(self, event):
 		root.display("""Crédits: TkT4nk\n
 Un jeu de: UNG Harry
 Remerciments: M.Muller, pour la gestion des touches.
-Ma sœur pour les fautes de franais (ç ?)
+Ma sœur pour les fautes de franais (sans ç?)
 Et avec mes amis: merci d'avoir testé le jeu!\n
 Joueur (et surtout son PC): %s
-Boss: TkT4nk, P.U.L.S.A.R.
+Boss: ln(3), P.U.L.S.A.R.
 Meilleurs jeux d'acteur, rien à redire\n
-Le classique: (Merci d'avoir jouer!)² (^_^)Y""" %(root.nom) )			
+Le classique: (Merci d'avoir jouer!)² \\(^_^)/""" %(root.nom) )			
 									
 """================Fin du mode 'Histoire"================"""
 
@@ -2197,7 +2199,7 @@ Appuez sur Entrée pour commencer.""")
 			printscore = self.canvas.create_text(500, 620, font="Time_New_Roman 15",
 								   text="Défaite(s): "+str(self.score["Défaite"]))
 			#PV des Ennemis
-			for var in range(1, 3):
+			for var in range(1, 4):
 				self.Joueurs[var].pv = self.score["Victoire"]
 		#...ou si tous les ennemis sont morts
 		if (self.Joueur2.mort) and (self.Joueur3.mort) and (self.Joueur4.mort):
@@ -2214,7 +2216,7 @@ Appuez sur Entrée pour commencer.""")
 			printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
 								   text="Victoire(s): "+str(self.score["Victoire"]))
 			#PV des Ennemis
-			for var in range(1, 3):
+			for var in range(1, 4):
 				self.Joueurs[var].pv = self.score["Victoire"]
 		if (self.score["Défaite"] == 0) and (self.score["Victoire"] == 12):
 			#=====Défis réussis!=====
