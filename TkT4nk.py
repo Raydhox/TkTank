@@ -5,7 +5,7 @@
 #Par: UNG Harry
 #Description: Jeu de char utilisant tkinter. On dirige un char,
 #   et il faut exterminer tous les autres chars.
-#Version: 1.01
+#Version: 1.02
 #Idée d'amélioration: Une meilleure IA (un peu osef); un mode réseau (!!!!);
 #	Pygame: bande sonore (prévu); support manette (...).
 #License: Je ne m'y connais pas grand chose, on va dire que vous pouvez
@@ -167,25 +167,25 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 			if (terrain[math.floor((self.char_y-2)/40)][coordx] != '1')\
 			and (terrain[math.floor((self.char_y-2)/40)][coordx2] != '1')\
 			and (test_collision(8) is False):
-				self.char_y -= 2
+				self.char_y -= 4
 		if (self.dir[1]):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (terrain[coordy][math.floor((self.char_x-2)/40)] != '1')\
 			and (terrain[coordy2][math.floor((self.char_x-2)/40)] != '1')\
 			and (test_collision(4) is False):
-				self.char_x -= 2
+				self.char_x -= 4
 		if (self.dir[2]):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (terrain[math.floor((self.char_y+41)/40)][coordx] != '1')\
 			and (terrain[math.floor((self.char_y+41)/40)][coordx2] != '1')\
 			and (test_collision(2) is False):
-				self.char_y += 2
+				self.char_y += 4
 		if (self.dir[3]):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (terrain[coordy][math.floor((self.char_x+41)/40)] != '1')\
 			and (terrain[coordy2][math.floor((self.char_x+41)/40)] != '1')\
 			and (test_collision(6) is False):
-				self.char_x += 2
+				self.char_x += 4
 		#Calul des nouvelles positions du canon
 		self.canon_x = self.char_x + 20 + 32*math.cos(self.alpha)
 		self.canon_y = self.char_y + 20 - 32*math.sin(self.alpha)
@@ -211,12 +211,12 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 			#Affichage
 			self.canvas.coords(self.canon, self.char_x+20, self.char_y+20, self.canon_x, self.canon_y)
 		#===Création de la balle (dictionnaire stocké dans une liste)===
-		self.munition.append({'vecteur_x':6*math.cos(self.alpha),
-							'vecteur_y':-6*math.sin(self.alpha),
+		self.munition.append({'vecteur_x': 12*math.cos(self.alpha),
+							'vecteur_y': -12*math.sin(self.alpha),
 							#Position
-							'obus_x':self.canon_x, 'obus_y':self.canon_y,
+							'obus_x': self.canon_x, 'obus_y': self.canon_y,
 							#Affichage
-							'obus':self.canvas.create_oval(self.canon_x, self.canon_y,
+							'obus': self.canvas.create_oval(self.canon_x, self.canon_y,
 														   self.canon_x+6, self.canon_y+6,
 														   width=1, fill=self.couleur)  })
 	
@@ -280,8 +280,8 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#Création d'obus (dictionnaire stocké dans une liste)
 		for k in range(62):
 			angle = k/10
-			self.munition.append({'vecteur_x':14*math.cos(angle),
-								'vecteur_y':-14*math.sin(angle),
+			self.munition.append({'vecteur_x':28*math.cos(angle),
+								'vecteur_y':-28*math.sin(angle),
 								'obus_x':self.mine_x, 'obus_y':self.mine_y,
 								#Affichage
 								'obus':self.canvas.create_oval(self.mine_x, self.mine_y,
@@ -654,9 +654,9 @@ class Main():
 		if k == 0:
 			self.fenetre.unbind('<Escape>')
 		#Affiche un rectangle en zoomant pendant 1 seconde...
-		if k != 50:
-			self.box = self.canvas.create_rectangle(520-4*k, 320-3*k, 520+4*k, 320+3*k, width=0, fill='Chocolate')
-			self.fenetre.after(20, self.display, message, k+1)
+		if k != 25:
+			self.box = self.canvas.create_rectangle(520-8*k, 320-6*k, 520+8*k, 320+6*k, width=0, fill='Chocolate')
+			self.fenetre.after(40, self.display, message, k+1)
 		#...puis affiche le texte
 		else:
 			self.canvas.create_text(520, 320, justify='center', font='Time_New_Roman 10', text=message)
@@ -777,7 +777,7 @@ class Main():
 		elif (event.x >= 140) and (event.x <= 380):
 			if (event.y >= 260) and (event.y <= 340):
 				self.noclick()
-				self.main = self.signets[self.save[-1]]()
+				self.main = Histoire7()#self.signets[self.save[-1]]()
 				self.main.afficher()
 			elif (event.y >= 460) and (event.y <= 540):
 				self.noclick()
@@ -799,7 +799,7 @@ class Main():
 			self.main.encore = False
 		except:
 			pass
-		self.fenetre.after(20, self.afficher)
+		self.fenetre.after(40, self.afficher)
 		
 
 class Defis:
@@ -991,7 +991,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom) )
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)
+			self.fenetre.after(40, self.boucle)
 
 class Histoire1:
 	
@@ -1087,7 +1087,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)
+			self.fenetre.after(40, self.boucle)
 		
 class Histoire2:
 	
@@ -1205,7 +1205,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom, root.nom) )
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 			
 class Histoire3:
 	
@@ -1280,7 +1280,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom))
 			root.main.afficher()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)				
+			self.fenetre.after(40, self.boucle)				
 
 class Histoire4:
 	
@@ -1399,7 +1399,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom))
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 			
 class Histoire5:
 	
@@ -1504,7 +1504,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)				
+			self.fenetre.after(40, self.boucle)				
 
 class Histoire6:
 	
@@ -1604,7 +1604,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 			self.canvas.create_rectangle(320, 320, 720, 420, fill='NavajoWhite')
 			self.canvas.create_text(520, 360, font="Time_New_Roman 32", text=self.password)
 			#C'est une boucle, donc c'est re-ti-par!
-			self.fenetre.after(20, self.boucle)		
+			self.fenetre.after(40, self.boucle)		
 			
 class Histoire0:
 	
@@ -1685,18 +1685,16 @@ Appuyez sur Entrée pour commencer.""" %(root.nom) )
 		#Mouvement des obus
 		for var in range(len(self.Joueurs)):
 			self.Joueurs[var].mouvement_obus()
-		rdg = random.randrange(0, 10)
-		if rdg <= 6:
-			alpha = random.randrange(0, 628)/100
-			#Tir
-			self.Joueur2.tir(alpha)
+		alpha = random.randrange(0, 628)/100
+		#Tir
+		self.Joueur2.tir(alpha)
 		#Déplacement des robots + joueur
 		self.Joueur1.mouvement_char()
 		#Il y a-t-il fin de partie?
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)		
+			self.fenetre.after(40, self.boucle)		
 
 class HistoireFin:
 	
@@ -1816,7 +1814,7 @@ Appuyez sur Entrée pour commencer.""")
 		#Mouvement des obus
 		self.Joueur2.mouvement_obus()
 		rdg = random.randrange(0, 10)
-		if rdg <= 4:
+		if rdg <= 8:
 			alpha = random.randrange(0, 628)/100
 			#Tir
 			self.Joueur2.tir(alpha)
@@ -1826,7 +1824,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)
+			self.fenetre.after(40, self.boucle)
 
 class Histoire8:
 	
@@ -1883,14 +1881,13 @@ class Histoire8:
 		#Affichage de la narration
 		root.display("""Mission 8: Copier-Coller\n
 Brilliant! Vous avez assuré(e)! Et maintenant,
-que vais-je faire... Voyns voyons...
-Voilà, je restore les données de ln(3)...
-Non, s'il te plaît, ln(3) tais-toi, merci bien!
-Ctrl+C, Ctrl+V et... Bref, tout m'a l'air en ordre,
-vous pouvez maintenant la vaincre proprement.
-Diantre! Il semblerait que le copier-coller ait
-un peu trop bien marcher... Il y a maintenant
-2 * {ln(3) + %s}!!
+que vais-je faire... Voyns voyons... Voilà,
+je restore les données de ln(3)... Non, s'il te plaît,
+ln(3) tais-toi, merci bien! Ctrl+C, Ctrl+V et...
+Bref, tout m'a l'air en ordre, vous pouvez maintenant
+la vaincre proprement. Diantre! Il semblerait que
+le copier-coller ait un peu trop bien marcher...
+Il y a maintenant 2 * {ln(3) + %s}!!
 Mais vous arrangerez cela, bien entendu!
 Mais je vais vous aider: d'après les données du jeu,
 aucun des deux %s ne doit mourir,
@@ -1966,7 +1963,7 @@ Appuyez sur Entrée pour commencer.""" %(root.nom, root.nom) )
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 
 class Histoire9:
 	
@@ -2076,7 +2073,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)			
+			self.fenetre.after(40, self.boucle)			
 
 class Histoire10:
 	
@@ -2243,7 +2240,7 @@ Appuez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)
+			self.fenetre.after(40, self.boucle)
 
 """================Coopération================"""
 class Coop:
@@ -2331,7 +2328,7 @@ Poser une mine : Click droit""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 			
 class Coop1:
 	
@@ -2428,7 +2425,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 
 class Coop2:
 	
@@ -2526,7 +2523,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 			
 class Coop3:
 	
@@ -2626,7 +2623,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 			
 class Coop4:
 	
@@ -2744,7 +2741,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)		
+			self.fenetre.after(40, self.boucle)		
 
 class Coop5:
 	
@@ -2877,7 +2874,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 		
 class Coop6:
 	
@@ -2954,11 +2951,9 @@ Appuyez sur Entrée pour commencer.""")
 			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer == 0):
 				self.Joueurs[k].minequiexplose()
 		#IA du boss simple: tir aléatoire
-		rdg = random.randrange(0, 100)
-		if rdg <= 60:
-			alpha = random.randrange(0, 628)/100
-			#Tir
-			self.Joueur3.tir(alpha)
+		alpha = random.randrange(0, 628)/100
+		#Tir
+		self.Joueur3.tir(alpha)
 		#Déplacement des robots + joueur
 		for k in range(len(self.Joueurs)):
 			self.Joueurs[k].mouvement_char()
@@ -2966,7 +2961,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)	
+			self.fenetre.after(40, self.boucle)	
 			
 class CoopFin:
 	
@@ -3110,7 +3105,7 @@ Appuyez sur Entrée pour commencer.""")
 		self.fin2partie()
 		#C'est une boucle, donc c'est re-ti-par!
 		if self.encore:
-			self.fenetre.after(20, self.boucle)
+			self.fenetre.after(40, self.boucle)
 		
 #On lance le jeu
 root = Main()
