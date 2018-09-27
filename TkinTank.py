@@ -186,8 +186,8 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 								'vecteur_y':-vitesse*math.sin(angle),
 								'obus_x':coord_x, 'obus_y':coord_y,
 								#Affichage
-								'obus':self.canvas.create_oval(self.mine_x-3, self.mine_y-3,
-															   self.mine_x+3, self.mine_y+3,
+								'obus':self.canvas.create_oval(coord_x-3, coord_y-3,
+															   coord_x+3, coord_y+3,
 															   width=2, fill=self.couleur)  })
 														   
 		
@@ -292,8 +292,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.timer = 5000
 		#Création d'obus (dictionnaire stocké dans une liste)
 		for k in range(69):
-			angle = k*4/10
-			self.obus(28, angle, self.mine_x, self.mine_y)
+			self.obus(28, k*0.4, self.mine_x, self.mine_y)
 			
 			
 	def ia(self, cible=(520, 320) ):
