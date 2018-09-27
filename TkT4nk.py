@@ -276,7 +276,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.canvas.delete(root.main.fenetre, self.mine)
 		#On peut de nouveau posé une mine
 		self.stock_mine = 1
-		self.timer = 5000
+		self.timer = 2500
 		#Création d'obus (dictionnaire stocké dans une liste)
 		for k in range(62):
 			angle = k/10
