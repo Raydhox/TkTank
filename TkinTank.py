@@ -25,7 +25,7 @@ import math, random
 #On crée une classe char
 class Char():
 	
-	def __init__(self, fenetre, canvas, x, y, couleur, nom, vitesse=1):
+	def __init__(self, fenetre, canvas, x, y, couleur, nom, vitesse=4, relief=1):
 		"""Où 'canvas' le nom du Canvas,
 'x' et 'y' les coordonnées du char,
 nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
@@ -53,10 +53,11 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#Pour le mouvement
 		self.dir = [False, False, False, False]
 		self.vitesse = vitesse
-		#Autre caractéristique (couleur du char, nom, état (mort ou pas?))
+		#Autre caractéristique ( couleur du char, nom, état (mort ou pas?), relief (taille des bordures) )
 		self.couleur = couleur
 		self.nom = nom
 		self.mort = False
+		self.relief = relief
 
 		
 	def afficher(self, terrain, Joueurs):
@@ -68,11 +69,25 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.nom = self.canvas.create_text(self.nom[1], self.nom[2], font="Time_New_Roman 15",
 										   text=str(self.nom[0]), fill=self.nom[3])
 		self.char = self.canvas.create_rectangle(self.char_x, self.char_y, self.char_x+40,
-												 self.char_y+40, width=2, fill=self.couleur)       
+												 self.char_y+40, width=self.relief, fill=self.couleur)       
 		self.pivot = self.canvas.create_oval(self.char_x+32, self.char_y+32, self.char_x+8,
-											 self.char_y+8, width=2, fill='black')
+											 self.char_y+8, width=2*self.relief, fill='black')
 		self.canon = self.canvas.create_line(self.char_x+20, self.char_y+20, self.canon_x,
-											 self.canon_y, width=8)
+											 self.canon_y, width=6+2*self.relief)
+											 
+	def option(self, vitesse=0, relief=0):
+		"""Change les options du char."""
+		if vitesse:
+			self.vitesse = vitesse
+		if relief:
+			self.relief = relief
+			self.canvas.itemconfig(self.char, width=self.relief)
+			self.canvas.itemconfig(self.pivot, width=2*self.relief)
+			self.canvas.itemconfig(self.canon, width=6+2*self.relief)
+			try:
+				self.canvas.itemconfig(self.mine, width=2+2*self.relief)
+			except:
+				pass
 		
 
 	def change_dir(self, event):
@@ -176,13 +191,13 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 								#Affichage
 								'obus':self.canvas.create_oval(coord_x-3, coord_y-3,
 															   coord_x+3, coord_y+3,
-															   width=2, fill=self.couleur)  })
+															   width=self.relief, fill=self.couleur)  })
 														   
 		
 	def tir(self, event):
 		"""===Gère le tir.==="""
 		self.mouvement_canon(event)
-		self.obus(12, self.alpha, self.canon_x, self.canon_y)
+		self.obus(3, self.alpha, self.canon_x, self.canon_y)
 	
 	def mouvement_canon(self, event):
 		"""===Mouvement du canon en fonction de la position de la souris.==="""
@@ -210,8 +225,8 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#Pour tous les obus:
 		for k in range(len(self.munition)):
 			#Déplacement
-			self.munition[k]['obus_x'] += self.munition[k]['vecteur_x']
-			self.munition[k]['obus_y'] += self.munition[k]['vecteur_y']
+			self.munition[k]['obus_x'] += self.vitesse*self.munition[k]['vecteur_x']
+			self.munition[k]['obus_y'] += self.vitesse*self.munition[k]['vecteur_y']
 			self.canvas.coords(self.munition[k]['obus'], self.munition[k]['obus_x'],
 							   self.munition[k]['obus_y'], self.munition[k]['obus_x']+6,
 							   self.munition[k]['obus_y']+6)
@@ -257,7 +272,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		if (self.terrain[coordy][coordx] != '1') and (self.terrain[coordy2][coordx2] != '1')\
 		and (pas2collision_char) and (self.stock_mine):
 			self.mine = self.canvas.create_oval(self.mine_x-12, self.mine_y-12, self.mine_x+12,
-											 self.mine_y+12, width=6, fill=self.couleur)
+											 self.mine_y+12, width=2+2*self.relief, fill=self.couleur)
 			#Pour éviter de mettre plusieurs mines
 			self.stock_mine = 0
 
@@ -270,7 +285,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.timer = 5000
 		#Création d'obus (dictionnaire stocké dans une liste)
 		for k in range(69):
-			self.obus(28, k*0.4, self.mine_x, self.mine_y)
+			self.obus(6, k*0.4, self.mine_x, self.mine_y)
 
 
 	def rip(self):
@@ -324,7 +339,7 @@ class Ennemi(Char):
 		Char.__init__(self, fenetre, canvas, x, y, couleur, nom)
 		self.pv, self.pv2base = pv, pv
 	
-	def dirobot(self, event, event2=None):
+	def dirobot(self, event):
 		#Gère la direction pour les Robots
 		if (event == 'Up'):
 			self.dir[0] = True
@@ -340,9 +355,11 @@ class Ennemi(Char):
 			self.dir[1] = False
 	
 	def ia(self, cible=(520, 320) ):
-		#Position relative, correspondant au "coordonées des cases" de 40*40
+		#Position relative, correspondant au "coordonées des cases" de 40*40...
 		coordx = int(self.char_x/40)
 		coordy = int(self.char_y/40)
+		coordx2 = int((self.char_x+39)/40)
+		coordy2 = int((self.char_y+39)/40)
 		#...après déplacement vers le haut / bas
 		coordyUp = int((self.char_y-self.vitesse)/40)
 		coordyDown = int((self.char_y+40+self.vitesse)/40)
@@ -351,12 +368,16 @@ class Ennemi(Char):
 		coordxRight = int((self.char_x+40+self.vitesse)/40)
 
 		#Pour un déplacement un peu plus aléatoire
-		rng = random.randrange(0, 100)            
-		#Si il n'y a pas de collision avec une brique (Haut, Bas, Gauche, Droite):
-		if (self.terrain[coordyUp][coordx] != '1') and (self.terrain[coordyUp][coordx+1] != '1')\
-		and (self.terrain[coordyDown][coordx] != '1') and (self.terrain[coordyDown][coordx+1] != '1')\
-		and (self.terrain[coordy][coordxLeft] != '1') and (self.terrain[coordy+1][coordxLeft] != '1')\
-		and (self.terrain[coordy][coordxRight] != '1') and (self.terrain[coordy+1][coordxRight] != '1'):
+		rng = random.randrange(0, 100)
+		#Faible chance de déplcement aléatoire (parce que c'est drôle, et pour éviter de coller au mur):
+		if rng < 3:     
+			#Déplacement dans une direction aléatoire
+			self.dirobot(['Up', 'Down', 'Left', 'Right'][random.randrange(0, 4)])        
+		#Sinon il n'y a pas de collision avec une brique (Haut, Bas, Gauche, Droite):
+		elif (self.terrain[coordyUp][coordx] != '1') and (self.terrain[coordyUp][coordx2] != '1')\
+		and (self.terrain[coordyDown][coordx] != '1') and (self.terrain[coordyDown][coordx2] != '1')\
+		and (self.terrain[coordy][coordxLeft] != '1') and (self.terrain[coordy2][coordxLeft] != '1')\
+		and (self.terrain[coordy][coordxRight] != '1') and (self.terrain[coordy2][coordxRight] != '1'):
 			"""=====Déplacement qui se rapproche de la cible====="""     
 			#Si le centre est au-dessus du robot, alors il va en haut
 			if cible[1] < self.char_y:
@@ -370,54 +391,19 @@ class Ennemi(Char):
 			#Sinon, il va à droite
 			elif cible[0] > self.char_x:
 				self.dirobot('Right')
-		# #Sinon, il y a collision, mais... (parce que c'est drôle):
-		# elif rng < 1:
-			# """...déplacement aléatoire (1%)"""
-			# direction = random.randrange(0, 4)     
-			# #...en haut
-			# if direction == 0:
-				# self.dirobot('Up')
-			# #...à droite
-			# if direction == 1:
-				# self.dirobot('Right')
-			# #...en bas
-			# if direction == 2:
-				# self.dirobot('Down')
-			# #...à gauche
-			# if direction == 3:
-				# self.dirobot('Left')
-		#Sinon, si il y a collision, parfois... (pour éviter un bug où le char reste coincé dans un coin,
-		#alternant entre phase 'collision', où il s'éloigne du mur, et phase 'non-collision', où il se rapproche
-		#du Joueur,sauf qu'en faisant cela, il y a de nouveau collision):
-		# elif rng < 10:
-			# """...déplacement "Sens Trigo": Haut |-> Droite |-> Bas |-> Gauche |-> Haut
-			# Mais on essaie de rester coller au mur (9%)"""
-			# #...en haut
-			# if int(self.terrain[coordyUp][coordx]) or int(self.terrain[coordyUp][coordx+1]):
-				# self.dirobot('Right', 'Up')
-			# #...à droite
-			# if int(self.terrain[coordy][coordxRight]) or int(self.terrain[coordy+1][coordxRight]):
-				# self.dirobot('Down', 'Right')
-			# #...en bas
-			# if int(self.terrain[coordyDown][coordx]) or int(self.terrain[coordyDown][coordx+1]):
-				# self.dirobot('Left', 'Down')
-			# #...à gauche
-			# if int(self.terrain[coordy][coordxLeft]) or int(self.terrain[coordy+1][coordxLeft]):
-				# self.dirobot('Up', 'Left')
-		#Sinon, il y a collision et...:
 		else:
 			"""...déplacement "Sens Trigo": Haut |-> Droite |-> Bas |-> Gauche |-> Haut"""
 			#...en haut
-			if int(self.terrain[coordyUp][coordx]) or int(self.terrain[coordyUp][coordx+1]):
+			if int(self.terrain[coordyUp][coordx]) or int(self.terrain[coordyUp][coordx2]):
 				self.dirobot('Right')
 			#...à droite
-			if int(self.terrain[coordyDown][coordxRight]) or int(self.terrain[coordyDown+1][coordxRight]):
+			if int(self.terrain[coordy][coordxRight]) or int(self.terrain[coordy2][coordxRight]):
 				self.dirobot('Down')
 			#...en bas
-			if int(self.terrain[coordyDown][coordx]) or int(self.terrain[coordyDown][coordx+1]):
+			if int(self.terrain[coordyDown][coordx]) or int(self.terrain[coordyDown][coordx2]):
 				self.dirobot('Left')
 			#...à gauche
-			if int(self.terrain[coordy][coordxLeft]) or int(self.terrain[coordy+1][coordxLeft]):
+			if int(self.terrain[coordy][coordxLeft]) or int(self.terrain[coordy2][coordxLeft]):
 				self.dirobot('Up')
 
 			
@@ -440,7 +426,7 @@ class Ennemi(Char):
 			self.canon_y = self.char_y + 20 - 32*math.sin(self.alpha)
 			#Affichage
 			self.canvas.coords(self.canon, self.char_x+20, self.char_y+20, self.canon_x, self.canon_y)
-			self.obus(12, self.alpha, self.canon_x, self.canon_y)
+			self.obus(3, self.alpha, self.canon_x, self.canon_y)
 	
 	"""Reprogramation des fonction gérant la mort du char."""
 	def rip(self):
@@ -450,7 +436,7 @@ class Ennemi(Char):
 	
 	def reborn(self):
 		Char.reborn(self)
-		self.pv = 1
+		self.pv = self.pv2base
 
 #On crée une classe char
 class Main():
@@ -458,6 +444,7 @@ class Main():
 	def __init__(self):
 		#On crée une fenêtre tkinter 'fenetre'
 		self.fenetre = Tk()
+		self.fenetre.config(width=1040, height=640, bg="NavajoWhite")
 		self.fenetre.title("TkTank.py")
 		self.fenetre.geometry("+0+0")
 		
@@ -467,7 +454,7 @@ class Main():
 
 		#On crée un Canvas 'jeu'
 		self.canvas = Canvas(self.fenetre, width=1040, height=640, bg='NavajoWhite', cursor="cross")
-		self.canvas.pack()#side=LEFT)
+		self.canvas.place(relx=0.5, rely=0.5, anchor=CENTER)#side=LEFT)
 		
 		#Mis en place du terrain0 sous forme d'une liste 'terrain0'
 		self.terrain0 = []
@@ -575,11 +562,28 @@ class Main():
 		self.canvas.bind('<Button-3>', self.Joueur1.miner)
 		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
 		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
+		self.fenetre.bind('<Control_L>', self.optionvit)
+		self.fenetre.bind('<Alt_L>', self.optionrel)
 		#Et on lance la boucle
 		self.boucle()
 		#On lance le tout
 		self.fenetre.mainloop()
-				
+	
+	def optionvit(self, event):
+		if self.fps > 10:
+			self.fps = int(self.fps/2)
+		else:
+			self.fps = 40
+		for var in range(len(self.Joueurs)):
+			self.Joueurs[var].option(vitesse=int(self.fps/10))
+	
+	def optionrel(self, event):
+		if self.Joueur1.relief < 3:
+			relief = self.Joueur1.relief + 1
+		else:
+			relief = 1
+		for var in range(len(self.Joueurs)):
+			self.Joueurs[var].option(relief=relief)
 
 	def fin2partie(self):
 		#Si le joueur est mort...
