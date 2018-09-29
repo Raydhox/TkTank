@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-#==================================TkTank==========================================================
-#Par: UNG Harry, 2nde-5
-#   TS4 (progression nulle en 1ère...)
-#Descrition: Jeu de char utilisant tkinter. On dirige un char,
-#   et il faut exterminer tous les autres chars. L'objectif finale est un jeu en réseau.
-#   Et je rajouterai bien un mode histoire. Une meilleure IA serait aussi la bienvenue.
+#==================================TkinTank==========================================================
+#Par: UNG Harry
+#	2nde-5: Initialisation du projet
+#	TS4: Finalisation du prototype; le jeu fonctionne enfin.
+#	MPSI2: Concaténation, amélioration.
+#Description: Jeu de char utilisant tkinter. On dirige un char,
+#   et il faut exterminer tous les autres chars. L'objectif finale est un jeu complet avec:
+#   Un mode histoire, une multi local et réseau, le tout agrémenté de multitude d'option et de musique!
 #License: License libre
 #==================================================================================================
 #Jeu inspirée de:
@@ -574,6 +576,7 @@ class Main():
 			self.fps = int(self.fps/2)
 		else:
 			self.fps = 40
+		print(int(1000/self.fps))
 		for var in range(len(self.Joueurs)):
 			self.Joueurs[var].option(vitesse=int(self.fps/10))
 	
