@@ -24,10 +24,12 @@
 from tkinter import*
 import math, random
 
+
+#================================LES PERSONNAGES================================#
 #On crée une classe char
 class Char():
 	
-	def __init__(self, fenetre, canvas, x, y, couleur, nom, vitesse=4, relief=1):
+	def __init__(self, fenetre, canvas, x, y, couleur, nom, vitesse=2, relief=1):
 		"""Où 'canvas' le nom du Canvas,
 'x' et 'y' les coordonnées du char,
 nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
@@ -281,7 +283,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 	
 	def minequiexplose(self):
 		"""===Explosion de la mine==="""
-		self.canvas.delete(main.fenetre, self.mine)
+		self.canvas.delete(self.fenetre, self.mine)
 		#On peut de nouveau posé une mine
 		self.stock_mine = 1
 		self.timer = 5000
@@ -314,10 +316,10 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		for k in range(len(self.munition)):
 			count += 1
 			kappa = k - count
-			self.canvas.delete(main.fenetre, self.munition[kappa]['obus'])
+			self.canvas.delete(self.fenetre, self.munition[kappa]['obus'])
 			del self.munition[kappa]
 		#La mine est également supprimés
-		self.canvas.delete(main.fenetre, self.mine)
+		self.canvas.delete(self.fenetre, self.mine)
 		self.stock_mine = 1
 		self.timer = 5000
 		#Nouvelles positions du char
@@ -440,10 +442,13 @@ class Ennemi(Char):
 		Char.reborn(self)
 		self.pv = self.pv2base
 
-#On crée une classe char
-class Main():
 
-	def __init__(self):
+#================================LE JEU================================#
+
+#On crée une classe "Racine" qui contient (+ ou -) le moteur du jeu.
+class Root():
+
+	def __init__(self, Menu):
 		#On crée une fenêtre tkinter 'fenetre'
 		self.fenetre = Tk()
 		self.fenetre.config(width=1040, height=640, bg="NavajoWhite")
@@ -451,8 +456,8 @@ class Main():
 		self.fenetre.geometry("+0+0")
 		
 		#Gestion du temps
-		#(Soit ici, 25 images par secondes)
-		self.fps = 40
+		#(Soit ici, 50 images par secondes)
+		self.fps = 20
 
 		#On crée un Canvas 'jeu'
 		self.canvas = Canvas(self.fenetre, width=1040, height=640, bg='NavajoWhite', cursor="cross")
@@ -526,11 +531,73 @@ class Main():
 		#Cimetière (n'est pas affiché)
 		self.terrain2.append("11111111111111111111111111")
 		self.terrain2.append("11111111111111111111111111")
-		self.terrain2.append("11111111111111111111111111")
+		self.terrain2.append("11111111111111111111111111") 
 		
-		#Terrain par défaut
-		self.terrain = self.terrain1
+		
+		#Liste des terrains disponibles
+		self.terrains = (self.terrain0, self.terrain1,self.terrain2) 
+		
+		#Lançe le menu principal (dans la démo, il n'y a pas de menu)
+		self.main = Menu(self.fenetre, self.canvas, self.terrains, self.fps)
+		self.main.commencer()
+	
+	def optionvit(self, event):
+		if self.fps > 10:
+			self.fps = int(self.fps/2)
+		else:
+			self.fps = 40
+		#print(int(1000/self.fps))
+		for var in range(len(self.Joueurs)):
+			self.main.Joueurs[var].option(vitesse=int(self.fps/10))
+	
+	def optionrel(self, event):
+		if self.main.Joueur1.relief < 3:
+			relief = self.main.Joueur1.relief + 1
+		else:
+			relief = 1
+		for var in range(len(self.main.Joueurs)):
+			self.main.Joueurs[var].option(relief=relief)
+	
+	def afficher(canvas, terrain, Joueurs):
+		#On parcours la liste et en fonction des valeurs, on affiche une brique ou non
+		for k1 in range(16):
+			for k2 in range(26):
+				if terrain[k1][k2] == '1':
+					x = k2*40
+					y = k1*40
+					canvas.create_rectangle(x, y, x+40, y+40, width=0, fill='DarkGoldenRod')
+		#On affiche les chars...
+		for var in range(len(Joueurs)):
+			Joueurs[var].afficher(terrain, Joueurs)
+	
+	def boucle(self):
+		#Mouvement des obus
+		for var in range(len(self.main.Joueurs)):
+			self.main.Joueurs[var].mouvement_obus()
+		#Mine:
+		for k in range(len(self.main.Joueurs)):
+			if self.main.Joueurs[k].stock_mine == 0:
+				self.main.Joueurs[k].timer -= self.fps
+			if (self.main.Joueurs[k].stock_mine == 0) and (self.main.Joueurs[k].timer <= 0):
+				self.main.Joueurs[k].minequiexplose()
+		#Déplacement des robots + joueur
+		for k in range(3):
+			self.main.Joueurs[k+1].ia( (self.main.Joueur1.char_x, self.main.Joueur1.char_y) )
+		for k in range(len(self.main.Joueurs)):
+			self.main.Joueurs[k].mouvement_char()
+		#Il y a-t-il fin de partie?
+		self.main.terminer()
+		#Si l'ont change de chapitre
+		if self.main.fin2partie():
+			self.main = self.main.fin2partie()
+		#C'est une boucle, donc c'est re-ti-par!
+		self.fenetre.after(self.fps, self.boucle)
+		
 
+class Demo(Root):
+	
+	def __init__(self, fenetre, canvas, terrain, fps):
+		self.fenetre, self.canvas, self.terrain, self.fps = fenetre, canvas, terrain[1], fps
 		#On crée les chars
 		self.Joueur1 = Char(self.fenetre, self.canvas, 80, 80, 'Yellow', ('Joueur', 60, 20, 'White'))
 		self.Joueur2 = Ennemi(self.fenetre, self.canvas, 920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'))
@@ -540,19 +607,11 @@ class Main():
 		self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
 		#Nombre de victoire et de défaites
-		self.score = {"Défaite":0, "Victoire":0}        
-
-	def afficher(self):
-		#On parcours la liste et en fonction des valeurs, on affiche une brique ou non
-		for k1 in range(16):
-			for k2 in range(26):
-				if self.terrain[k1][k2] == '1':
-					x = k2*40
-					y = k1*40
-					self.canvas.create_rectangle(x, y, x+40, y+40, width=0, fill='DarkGoldenRod')
-		#On affiche les chars...
-		for var in range(len(self.Joueurs)):
-			self.Joueurs[var].afficher(self.terrain, self.Joueurs)
+		self.score = {"Défaite":0, "Victoire":0}
+		
+	def commencer(self):
+		#Affichage élémentaire (terrain et chars)
+		Root.afficher(self.canvas, self.terrain, self.Joueurs)
 		#...et les scores
 		printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
 								   text="Victoire: "+str(self.score["Victoire"]))
@@ -564,31 +623,13 @@ class Main():
 		self.canvas.bind('<Button-3>', self.Joueur1.miner)
 		self.fenetre.bind('<KeyPress>', self.Joueur1.change_dir)
 		self.fenetre.bind('<KeyRelease>', self.Joueur1.stop_dir)
-		self.fenetre.bind('<Control_L>', self.optionvit)
-		self.fenetre.bind('<Alt_L>', self.optionrel)
-		#Et on lance la boucle
-		self.boucle()
-		#On lance le tout
-		self.fenetre.mainloop()
+		#self.fenetre.bind('<Control_L>', Root.optionvit)
+		#self.fenetre.bind('<Alt_L>', Root.optionrel)
 	
-	def optionvit(self, event):
-		if self.fps > 10:
-			self.fps = int(self.fps/2)
-		else:
-			self.fps = 40
-		print(int(1000/self.fps))
-		for var in range(len(self.Joueurs)):
-			self.Joueurs[var].option(vitesse=int(self.fps/10))
-	
-	def optionrel(self, event):
-		if self.Joueur1.relief < 3:
-			relief = self.Joueur1.relief + 1
-		else:
-			relief = 1
-		for var in range(len(self.Joueurs)):
-			self.Joueurs[var].option(relief=relief)
-
 	def fin2partie(self):
+		return 0
+	
+	def terminer(self):
 		#Si le joueur est mort...
 		if (self.Joueur1.mort == True):
 			#Réinitialisation
@@ -613,36 +654,12 @@ class Main():
 			#Affichage
 			printscore = self.canvas.create_text(500, 20, font="Time_New_Roman 15",
 								   text="Victoire(s): "+str(self.score["Victoire"]))
-				
-				
-	def boucle(self):
-		"""===Boucle principale du jeu.==="""
-		#Mouvement des obus
-		for var in range(len(self.Joueurs)):
-			self.Joueurs[var].mouvement_obus()
-		#Mine:
-		for k in range(len(self.Joueurs)):
-			if self.Joueurs[k].stock_mine == 0:
-				self.Joueurs[k].timer -= self.fps
-			if (self.Joueurs[k].stock_mine == 0) and (self.Joueurs[k].timer <= 0):
-				self.Joueurs[k].minequiexplose()
-		#Déplacement des robots + joueur
-		for k in range(3):
-			self.Joueurs[k+1].ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
-		for k in range(len(self.Joueurs)):
-			self.Joueurs[k].mouvement_char()
-		#Il y a-t-il fin de partie?
-		self.fin2partie()
-		#C'estune boucle, donc c'est re-ti-par!
-		self.fenetre.after(self.fps, self.boucle)
-
-#class Demo():
-	
+			
 
 #On lance le jeu
-main = Main()
-main.afficher()
-
+racine = Root(Demo)
+racine.boucle()
+racine.fenetre.mainloop()
 
 
 
