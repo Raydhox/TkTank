@@ -452,7 +452,7 @@ class Root():
 		#On crée une fenêtre tkinter 'fenetre'
 		self.fenetre = Tk()
 		self.fenetre.config(width=1040, height=640, bg="NavajoWhite")
-		self.fenetre.title("TkTank.py")
+		self.fenetre.title("Tk in Tank.py")
 		self.fenetre.geometry("+0+0")
 
 		#On crée un Canvas 'jeu'
@@ -532,6 +532,18 @@ class Root():
 		#Liste des terrains disponibles
 		self.terrains = (self.terrain0, self.terrain1,self.terrain2) 
 		
+		#Récupère ou créer les données de sauvegarde
+		self.sauvegarder()
+		
+		#Lançe le menu principal (dans la démo, il n'y a pas de menu)
+		self.Main0 = Menu
+		self.main = Menu(self.fenetre, self.canvas, self.terrains, self.fps, self.relief)
+		self.main.commencer()
+		
+		#Echap permet de revenir sur le Menu pincipal
+		self.fenetre.bind('<Escape>', self.gotoMenu)
+	
+	def sauvegarder(self):
 		#Sauvegarde
 		try:
 			with open("save.tktank", "rb") as save:
@@ -548,16 +560,10 @@ class Root():
 		self.fps = self.save[0]
 		#Gestion des graphismes
 		self.relief = self.save[1]
-		
-		#Lançe le menu principal (dans la démo, il n'y a pas de menu)
-		self.Main0 = Menu
-		self.main = Menu(self.fenetre, self.canvas, self.terrains, self.fps, self.relief)
-		self.main.commencer()
-		
-		#Echap permet de revenir sur le Menu pincipal
-		self.fenetre.bind('<Escape>', self.gotoMenu)
-		
+			
 	def gotoMenu(self, event):
+		#Récupère des changements éventuelles
+		self.sauvegarder()
 		#Lançe le menu...
 		self.main = self.Main0(self.fenetre, self.canvas, self.terrains, self.fps, self.relief)
 		#...et l'affiche
@@ -645,7 +651,7 @@ class Menu(Root):
 	def commencer(self):
 		Root.afficher(self.canvas, self.terrain, self.Joueurs)	
 		#On affiche le titre
-		self.canvas.create_text(520, 100, font="Comic_Sans_MS 100", fill="DarkGoldenRod", text="TkT4nk")
+		self.canvas.create_text(520, 100, font="Comic_Sans_MS 100", fill="DarkGoldenRod", text="TkinT4nk")
 		#On affiche les modes de jeu disponible
 		#===Défis===
 		self.canvas.create_rectangle(40, 40, 120, 120, width=1)
@@ -689,14 +695,13 @@ class Menu(Root):
 				self.choix = 0
 			elif (event.y >= 460) and (event.y <= 540):
 				self.choix = 0
-				
-		
 	
 	def fin2partie(self):
 		return self.choix
 	
 	def recommencer(self):
 		return 0
+
 
 class Options(Root):
 	def __init__(self, fenetre, canvas, terrains, fps, relief):
@@ -705,9 +710,9 @@ class Options(Root):
 		self.terrain = terrains[0]
 		
 		#Chars décoratifs
-		self.Joueur0 = Char(self.fenetre, self.canvas, 550, 470, 'Yellow', ('', 0, 0, 'White'), int(fps/10), 1)
-		self.Joueur1 = Char(self.fenetre, self.canvas, 700, 470, 'Red', ('', 0, 0, 'DarkRed'), int(fps/10), 2)
-		self.Joueur2 = Char(self.fenetre, self.canvas, 850, 470, 'DodgerBlue', ('', 0, 0, 'DarkBlue'), int(fps/10), 3)
+		self.Joueur0 = Char(self.fenetre, self.canvas, 545, 470, 'Red', ('', 0, 0, 'DarkRed'), int(fps/10), 1)
+		self.Joueur1 = Char(self.fenetre, self.canvas, 705, 470, 'LimeGreen', ('', 0, 0, 'DarkGreen'), int(fps/10), 2)
+		self.Joueur2 = Char(self.fenetre, self.canvas, 865, 470, 'DodgerBlue', ('', 0, 0, 'DarkBlue'), int(fps/10), 3)
 		#On enregistre les Joueurs dans une liste
 		self.Joueurs = [self.Joueur0, self.Joueur1, self.Joueur2]
 		
@@ -725,7 +730,9 @@ class Options(Root):
 		self.canvas.create_text(260, 300, font="Comic_Sans_MS 40", fill="DarkGoldenRod", text="FPS")
 		#Les différentes options disponibles
 		for k in range(3):
-			self.canvas.create_text(565+160*k, 300, font="Comic_Sans_MS 35", fill="DarkGoldenRod", text=str(25*2**k) )
+			self.canvas.create_text(565+160*k, 300, font="Comic_Sans_MS 33", fill="DarkGoldenRod", text=str(25*2**k) )
+		#L'option choisie
+		self.choix_fps = self.canvas.create_rectangle(850-160*math.log(self.fps/10, 2), 260, 930-160*math.log(self.fps/10, 2), 340, width=4)
 		
 		#Relief
 		self.canvas.create_rectangle(140, 460, 380, 540, width=4)
@@ -733,34 +740,41 @@ class Options(Root):
 		#On affiche les mines
 		for k in range( len(self.Joueurs) ):
 			self.Joueurs[k].miner(None)
+		#L'option choisie
+		self.choix_relief = self.canvas.create_rectangle(365+160*self.relief, 460, 445+160*self.relief, 540, width=4)
 		#===Astuce===
 		self.canvas.create_text(520, 620, font="Comic_Sans_MS 10", fill="NavajoWhite",
-								text="Astuce: Vous pouvez à tout moment revenir au Menu en appuyant sur Echap.")
+								text="Astuce: Vous pouvez à tout revenir au Menu en appuyant sur Echap.")
 		
 		#Evènement
 		self.canvas.bind('<Button-1>', self.changoptions)
 		self.canvas.bind('<Button-3>', self.changoptions)
 		
 	def changoptions(self, event):
-		pass
-		#Si on clique sur un bouton:
-		#	On supprime le Menu...
-		#	...et on lance le mode de jeu choisis
-		# if (event.x >= 40) and (event.x <= 120):
-			# if (event.y >= 40) and (event.y <= 120):
-				# self.choix = 0
-		# elif (event.x >= 140) and (event.x <= 380):
-			# if (event.y >= 260) and (event.y <= 340):
-				# self.choix = 0
-			# elif (event.y >= 460) and (event.y <= 540):
-				# self.choix = Demo( self.fenetre, self.canvas, self.terrains, self.fps, self.relief )
-		# elif (event.x >= 660) and (event.x <= 900):
-			# if (event.y >= 260) and (event.y <= 340):
-				# self.choix = 0
-			# elif (event.y >= 460) and (event.y <= 540):
-				# self.choix = 0
-				
-		
+		#Si on clique sur une option:
+		#	Pour changer le nombre de FPS
+		if (event.y >= 260) and (event.y <= 340):
+			for k in range(3):
+				if (event.x >= 850-160*k) and (event.x <= 930-160*k):
+					self.fps = int( 10*2**k )
+		#	Pour changer la taille des bordures
+		elif (event.y >= 460) and (event.y <= 540):
+			for k in range(3):
+				if (event.x >= 525+160*k) and (event.x <= 700+160*k):
+					self.relief = k+1
+					
+		#Si il existe une sauvegarde, on la récupère pour la modifier.
+		try:
+			with open("save.tktank", "rb") as save:
+				save = pickle.Unpickler(save)
+				self.save = save.load()
+		except:
+			self.save = [0]*6
+		#Sauvegarde en cours, ne pas éteindre...
+		with open("save.tktank", "wb") as save:
+			save = pickle.Pickler(save)
+			self.save[0:2] = [self.fps, self.relief]
+			save.dump(self.save)
 	
 	def fin2partie(self):
 		return 0
@@ -768,9 +782,9 @@ class Options(Root):
 	def recommencer(self):
 		#L'options choisies
 		#Pour les fps
-		self.canvas.create_rectangle(850-160*math.log(self.fps/10, 2), 260, 930-160*math.log(self.fps/10, 2), 340, width=4)
+		self.canvas.coords(self.choix_fps, 850-160*math.log(self.fps/10, 2), 260, 930-160*math.log(self.fps/10, 2), 340)
 		#Pour les bordures
-		self.canvas.create_rectangle(365+160*self.relief, 460, 445+160*self.relief, 540, width=4)
+		self.canvas.coords(self.choix_relief, 365+160*self.relief, 460, 445+160*self.relief, 540)
 		#On empêche les mines d'exploser
 		for k in range( len(self.Joueurs) ):
 			self.Joueurs[k].timer = 5000
