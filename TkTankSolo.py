@@ -18,7 +18,8 @@
 #==================================================================================================
 
 #MODUlES
-from tkinter import*
+from tkinter import *
+from tkinter.filedialog import askopenfilename
 import math, random
 
 #VARIABLES
@@ -48,7 +49,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.mine_x = 0
 		self.mine_y = 0
 		self.stock_mine = 1
-		self.timer = 5000
+		self.timer, self.timer0 = 3000, 3000
 		#Pour les munitions
 		self.munition = []
 		#Pour le mouvement
@@ -71,26 +72,36 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.Joueurs = root.Joueurs
 		self.graveyard = (root.y+1)*TILE
 		#Affichage
+		#Nom
 		self.id = self.canvas.create_text(self.nom[1], self.nom[2], font="Time_New_Roman 15",
 										   text="%s: %d PV" %(self.nom[0], self.pv), fill=self.nom[3])
+		#Le "corps" du char
 		self.char = self.canvas.create_rectangle(self.char_x, self.char_y, self.char_x+TILE,
 												 self.char_y+TILE, width=self.relief, fill=self.couleur)
+		#Les roues
 		self.roue1 = self.canvas.create_rectangle(self.char_x, self.char_y, self.char_x+5*self.relief,
 											 self.char_y+TILE, fill="DarkGrey")
 		self.roue2 = self.canvas.create_rectangle(self.char_x+TILE-5*self.relief, self.char_y, self.char_x+TILE,
 											 self.char_y+TILE, fill="DarkGrey")
+		#Le canon
 		self.canon = self.canvas.create_line(self.char_x+TILE/2, self.char_y+TILE/2, self.canon_x,
 											 self.canon_y, width=TILE//5+2*self.relief)
+		#Le pivot (cache une partie du canon, ce qui est voulu)
 		self.pivot = self.canvas.create_oval(self.char_x+0.5*TILE, self.char_y+0.5*TILE, self.char_x+TILE//5,
 											 self.char_y+TILE//5, width=5*self.relief, fill=self.couleur)
 		self.afficher()
 
 	def afficher(self):
 		"""Fonction qui affiche le char."""
+		#Nom
 		self.canvas.itemconfig(self.id, text="%s: %d PV" %(self.nom[0], self.pv) )
+		#Le "corps" du char
 		self.canvas.coords(self.char, self.char_x, self.char_y, self.char_x+TILE, self.char_y+TILE)
+		#Le canon
 		self.canvas.coords(self.canon, self.char_x+TILE/2, self.char_y+TILE/2, self.canon_x, self.canon_y)
+		#Le pivot
 		self.canvas.coords(self.pivot, self.char_x+0.25*TILE, self.char_y+0.25*TILE, self.char_x+0.75*TILE, self.char_y+0.75*TILE)
+		#Les roues
 		if self.dir[1] or self.dir[3]:
 			self.canvas.coords(self.roue1, self.char_x, self.char_y, self.char_x+TILE, self.char_y+5*self.relief)
 			self.canvas.coords(self.roue2, self.char_x, self.char_y+TILE-5*self.relief, self.char_x+TILE, self.char_y+TILE)
@@ -115,24 +126,24 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 
 	def change_dir(self, event):
 		#Active la direction
-		if (event.keysym.lower() == 'z') or (event.keysym.lower() == 'w') or (event.keysym == 'Up'):
+		if (event.keysym == 'Up') or (event.keysym.lower() == 'z') or (event.keysym.lower() == 'w'):
 			self.dir[0] = True
-		elif (event.keysym.lower() == 'q') or (event.keysym.lower() == 'a') or (event.keysym == 'Left'):
+		elif (event.keysym == 'Left') or (event.keysym.lower() == 'q') or (event.keysym.lower() == 'a'):
 			self.dir[1] = True
-		elif (event.keysym.lower() == 's') or (event.keysym == 'Down'):
+		elif (event.keysym == 'Down') or (event.keysym.lower() == 's'):
 			self.dir[2] = True
-		elif (event.keysym.lower() == 'd') or (event.keysym == 'Right'):
+		elif (event.keysym == 'Right') or (event.keysym.lower() == 'd'):
 			self.dir[3] = True
 
 	def stop_dir(self, event):
 		#Désactive la direction
-		if (event.keysym.lower() == 'z') or (event.keysym.lower() == 'w') or (event.keysym == 'Up'):
+		if (event.keysym == 'Up') or (event.keysym.lower() == 'z') or (event.keysym.lower() == 'w'):
 			self.dir[0] = False
-		elif (event.keysym.lower() == 'q') or (event.keysym.lower() == 'a') or (event.keysym == 'Left'):
+		elif (event.keysym == 'Left') or (event.keysym.lower() == 'q') or (event.keysym.lower() == 'a'):
 			self.dir[1] = False
-		elif (event.keysym.lower() == 's') or (event.keysym == 'Down'):
+		elif (event.keysym == 'Down') or (event.keysym.lower() == 's'):
 			self.dir[2] = False
-		elif (event.keysym.lower() == 'd') or (event.keysym == 'Right'):
+		elif (event.keysym == 'Right') or (event.keysym.lower() == 'd'):
 			self.dir[3] = False
 
 
@@ -140,62 +151,59 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		"""===Mouvement du char==="""
 		#Variables globales
 		collision = False
-		#Position relative, correspondant au "coordonées des cases" de 50*50
+		#Position relative, correspondant au "coordonées des cases" de taille TILE*TILE
+		#Côté haut-gauche du char
 		coordx = math.floor(self.char_x / TILE)
 		coordy = math.floor(self.char_y / TILE)
+		#Côté bas-droite
 		coordx2 = math.floor((self.char_x+TILE-1) / TILE)
 		coordy2 = math.floor((self.char_y+TILE-1) / TILE)
-		#Si il n'y a pas collision avec un char ou une mine...
+		#Si il n'y a pas collision avec un char...
 		def test_collision(card):
 			"""Voir clavier numérique (flèche)"""
 			#Card = Cardinal: Où on va, (d'après pavé numérique)
-			what = False
 			for var in range(len(self.Joueurs)):
 				if (self.char_x > self.Joueurs[var].char_x-TILE) and (self.char_x < self.Joueurs[var].char_x+TILE)\
 				and (self.char_y-2 > self.Joueurs[var].char_y-TILE) and (self.char_y-2 < self.Joueurs[var].char_y+TILE)\
-				and (self.couleur != self.Joueurs[var].couleur) and (card == 8):
-					what = True
-					break
+				and (self.couleur != self.Joueurs[var].couleur) and (card == "Up"):
+					return True
 				elif (self.char_x+1 > self.Joueurs[var].char_x-TILE) and (self.char_x+1 < self.Joueurs[var].char_x+TILE)\
 				and (self.char_y > self.Joueurs[var].char_y-TILE) and (self.char_y < self.Joueurs[var].char_y+TILE)\
-				and (self.couleur != self.Joueurs[var].couleur) and (card == 6):
-					what = True
-					break
+				and (self.couleur != self.Joueurs[var].couleur) and (card == "Right"):
+					return True
 				elif (self.char_x-2 > self.Joueurs[var].char_x-TILE) and (self.char_x-2 < self.Joueurs[var].char_x+TILE)\
 				and (self.char_y > self.Joueurs[var].char_y-TILE) and (self.char_y < self.Joueurs[var].char_y+TILE)\
-				and (self.couleur != self.Joueurs[var].couleur) and (card == 4):
-					what = True
-					break
+				and (self.couleur != self.Joueurs[var].couleur) and (card == "Left"):
+					return True
 				elif (self.char_x > self.Joueurs[var].char_x-TILE) and (self.char_x < self.Joueurs[var].char_x+TILE)\
 				and (self.char_y+1 > self.Joueurs[var].char_y-TILE) and (self.char_y+1 < self.Joueurs[var].char_y+TILE)\
-				and (self.couleur != self.Joueurs[var].couleur) and (card == 2):
-					what = True
-					break
-			return what
+				and (self.couleur != self.Joueurs[var].couleur) and (card == "Down"):
+					return True
+			return False
 		#...on se déplace...
 		if (self.dir[0] == True):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (self.terrain[math.floor((self.char_y-self.vitesse)/TILE)][coordx] != '1')\
 			and (self.terrain[math.floor((self.char_y-self.vitesse)/TILE)][coordx2] != '1')\
-			and (test_collision(8) is False):
+			and (test_collision("Up") is False):
 				self.char_y -= self.vitesse
 		if (self.dir[1] == True):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (self.terrain[coordy][math.floor((self.char_x-self.vitesse)/TILE)] != '1')\
 			and (self.terrain[coordy2][math.floor((self.char_x-self.vitesse)/TILE)] != '1')\
-			and (test_collision(4) is False):
+			and (test_collision("Left") is False):
 				self.char_x -= self.vitesse
 		if (self.dir[2] == True):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (self.terrain[math.floor((self.char_y+TILE-1+self.vitesse)/TILE)][coordx] != '1')\
 			and (self.terrain[math.floor((self.char_y+TILE-1+self.vitesse)/TILE)][coordx2] != '1')\
-			and (test_collision(2) is False):
+			and (test_collision("Down") is False):
 				self.char_y += self.vitesse
 		if (self.dir[3] == True):
 			#...Si il n'y a pas de collision avec une brique ou un char:
 			if (self.terrain[coordy][math.floor((self.char_x+TILE-1+self.vitesse)/TILE)] != '1')\
 			and (self.terrain[coordy2][math.floor((self.char_x+TILE-1+self.vitesse)/TILE)] != '1')\
-			and (test_collision(6) is False):
+			and (test_collision("Right") is False):
 				self.char_x += self.vitesse
 		#Calul des nouvelles positions du canon
 		self.canon_x = self.char_x + TILE/2 + 0.8*TILE*math.cos(self.alpha)
@@ -296,9 +304,9 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.canvas.delete(self.fenetre, self.mine)
 		#On peut de nouveau posé une mine
 		self.stock_mine = 1
-		self.timer = 5000
+		self.timer = self.timer0
 		#Création d'obus (dictionnaire stocké dans une liste)
-		for k in range(69):
+		for k in range(100):
 			self.obus(6, k*0.4, self.mine_x, self.mine_y)
 
 
@@ -341,6 +349,8 @@ class Ennemi(Char):
 	def __init__(self, x, y, couleur, nom, pv=16):
 		#Classe qui hérite de le classe Char
 		Char.__init__(self, x, y, couleur, nom, pv)
+		#Les mines des Ennemis explosent au bout de 5 secondes 
+		self.timer0 = 5000
 
 	def dirobot(self, event):
 		#Gère la direction pour les Robots
@@ -444,11 +454,29 @@ class Main():
         self.fenetre.geometry("+0+0")
         
         #Mis en place du terrain de jeu sous forme de liste 'terrain'
-        self.terrain = []
-        self.terrain.append("1111111111111111111111111111111111")
-        for k in range(19):
-            self.terrain.append("1000000000000000000000000000000001")
-        self.terrain.append("1111111111111111111111111111111111")
+        self.terrain = [
+                "1111111111111111111111111111111111",
+                "1000000000000000000001000000000001",
+                "1000000000000000000001000000000001",
+                "1000000000000000000001000000000001",
+                "1000000000001000000000000000000001",
+                "1000000000001000000000000000000001",
+                "1000000000001000000000000000000001",
+                "1111111110001001111111111111110001",
+                "1000000000001000000000000000000001",
+                "1000000000001000000000000000000001",
+                "1000000000000000000000000000000001",
+                "1000000000000000000001000000000001",
+                "1000000000000000000001000000000001",
+                "1000111111111111110001000111111111",
+                "1000000000000000000001000000000001",
+                "1000000000000000000001000000000001",
+                "1000000000000000000001000000000001",
+                "1000000000001000000000000000000001",
+                "1000000000001000000000000000000001",
+                "1000000000001000000000000000000001",
+                "1111111111111111111111111111111111",
+                ]
         #Cimetière (n'est pas affiché)
         for k in range(3):
             self.terrain.append("1111111111111111111111111111111111")
@@ -457,7 +485,8 @@ class Main():
 
         #Charge un terrain existant
         try:
-            with open("terrain.txt", "r") as f:
+            filename = askopenfilename(defaultextension='*.tktank', filetypes=[('supported', ('*.tktank'))])
+            with open(filename, "r") as f:
                 self.terrain = []
                 for k in range(self.y):
                     self.terrain.append(f.readline()[:self.x])
@@ -472,15 +501,15 @@ class Main():
         self.canvas.pack(side=TOP)
 
         #On crée les chars
-        self.Joueur1 = Char(80, 80, 'Yellow', ('Joueur', 3*TILE, TILE/2, 'White'))
-        self.Joueur2 = Ennemi(920, 80, 'Red', ('0rdi', (self.x-3)*TILE, TILE/2, 'DarkRed'))
-        self.Joueur3 = Ennemi(80, 520, 'LimeGreen', ('Ordi', 3*TILE, (self.y-0.5)*TILE, 'DarkGreen'))
-        self.Joueur4 = Ennemi(920, 520, 'DodgerBlue', ('Ordi', (self.x-3)*TILE, (self.y-0.5)*TILE, 'DarkBlue'))
+        self.Joueur1 = Char(2*TILE, 2*TILE, 'Yellow', ('Joueur', 3*TILE, TILE/2, 'White'))
+        self.Joueur2 = Ennemi((self.x-3)*TILE, 2*TILE, 'Red', ('0rdi', (self.x-3)*TILE, TILE/2, 'DarkRed'))
+        self.Joueur3 = Ennemi(2*TILE, (self.y-3)*TILE, 'LimeGreen', ('Ordi', 3*TILE, (self.y-0.5)*TILE, 'DarkGreen'))
+        self.Joueur4 = Ennemi((self.x-3)*TILE, (self.y-3)*TILE, 'DodgerBlue', ('Ordi', (self.x-3)*TILE, (self.y-0.5)*TILE, 'DarkBlue'))
         #On enregistre les Joueurs dans une liste
         self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
         #Nombre de victoire et de défaites
-        self.score = {"Défaite":0, "Victoire":0}        
+        self.score = {"Defaite":0, "Victoire":0}        
 
     def afficher(self):
         #On parcours la liste et en fonction des valeurs, on affiche une brique ou non
@@ -494,10 +523,10 @@ class Main():
         for var in range(len(self.Joueurs)):
             self.Joueurs[var].born(self)
         #...et les scores
-        printscore = self.canvas.create_text(self.x*TILE/2, (self.y-0.5)*TILE, font="Time_New_Roman 15",
-                                   text="Défaite(s): "+str(self.score["Défaite"]))
-        printscore = self.canvas.create_text(self.x*TILE/2, TILE/2, font="Time_New_Roman 15",
-                                   text="Victoire(s): "+str(self.score["Victoire"]))
+        self.defaite = self.canvas.create_text(self.x*TILE/2, (self.y-0.5)*TILE, font="Time_New_Roman 15",
+                                   text="Défaite(s): {}".format(self.score["Defaite"]) )
+        self.victoire = self.canvas.create_text(self.x*TILE/2, TILE/2, font="Time_New_Roman 15",
+                                   text="Victoire(s): {}".format(self.score["Victoire"]) )
         #Evènements
         self.canvas.bind('<Motion>', self.Joueur1.mouvement_canon)
         self.canvas.bind('<Button-1>', self.Joueur1.tir)
@@ -519,12 +548,9 @@ class Main():
             self.Joueur3.reborn(80, 520)
             self.Joueur4.reborn(920, 520)
             #Score défaite +1
-            self.score["Défaite"] = self.score["Défaite"] + 1
-            #Effacement de la surface (ligne du haut)
-            self.canvas.create_rectangle(self.x*TILE//4, (self.y-1)*TILE, self.x*TILE*3//4, self.y*TILE, width=0, fill='DarkGoldenRod')
+            self.score["Defaite"] = self.score["Defaite"] + 1
             #Affichage
-            printscore = self.canvas.create_text(self.x*TILE/2, (self.y-0.5)*TILE, font="Time_New_Roman 15",
-                                   text="Défaite(s): "+str(self.score["Défaite"]))
+            self.canvas.itemconfig(self.defaite, text="Défaite(s): {}".format(self.score["Defaite"]) )
         #...ou si tous les ennemis sont morts
         if (self.Joueur2.mort == True) and (self.Joueur3.mort == True) and (self.Joueur4.mort == True):
             #Réinitialisation
@@ -535,10 +561,7 @@ class Main():
             #Score défaite +1
             self.score["Victoire"] = self.score["Victoire"] + 1
             #Effacement de la surface (ligne du haut)
-            self.canvas.create_rectangle(self.x*TILE//4, 0, self.x*TILE*3//4, TILE, width=0, fill='DarkGoldenRod')
-            #Affichage
-            printscore = self.canvas.create_text(self.x*TILE/2, TILE/2, font="Time_New_Roman 15",
-                                   text="Victoire(s): "+str(self.score["Victoire"]))
+            self.canvas.itemconfig(self.victoire, text="Victoire(s): {}".format(self.score["Victoire"]) )
                 
                 
     def boucle(self):
@@ -555,6 +578,7 @@ class Main():
         #Déplacement des robots + joueur
         for k in range(3):
             self.Joueurs[k+1].ia( (self.Joueur1.char_x, self.Joueur1.char_y) )
+            #pass
         for k in range(len(self.Joueurs)):
             self.Joueurs[k].mouvement_char()
         #Il y a-t-il fin de partie?
@@ -566,8 +590,6 @@ class Main():
 #On lance le jeu
 racine = Main()
 racine.afficher()
-racine.boucle()
-racine.fenetre.mainloop()
 
 
 
