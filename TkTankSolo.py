@@ -334,7 +334,7 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#La mine est également supprimés
 		self.canvas.delete(self.fenetre, self.mine)
 		self.stock_mine = 1
-		self.timer = 5000
+		self.timer = self.timer0
 		#Nouvelles positions du char
 		self.char_x = self.char_x0
 		self.char_y = self.char_y0
