@@ -17,17 +17,19 @@
 #   et si il y a des fautes de français: désolé.
 #==================================================================================================
 
-#On import les modules nécessaires
+#MODUlES
 from tkinter import*
 import math, random
 
+#VARIABLES
 TILE = 32
 TIME = 40
-#================================LES PERSONNAGES================================#
+
+#================================CHARS================================#
 #On crée une classe char
 class Char():
 
-	def __init__(self, x, y, couleur, nom, vitesse=1, relief=1):
+	def __init__(self, x, y, couleur, nom, pv=16, vitesse=1, relief=1):
 		"""Où 'canvas' le nom du Canvas,
 'x' et 'y' les coordonnées du char,
 nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
@@ -52,6 +54,8 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#Pour le mouvement
 		self.dir = [False, False, False, False]
 		self.vitesse = vitesse*TILE/8
+		#PV du char
+		self.pv, self.pv2base = pv, pv
 		#Autre caractéristique ( couleur du char, nom, état (mort ou pas?), relief (taille des bordures) )
 		self.couleur = couleur
 		self.nom = nom
@@ -67,21 +71,32 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.Joueurs = root.Joueurs
 		self.graveyard = (root.y+1)*TILE
 		#Affichage
-		self.nom = self.canvas.create_text(self.nom[1], self.nom[2], font="Time_New_Roman 15",
-										   text=str(self.nom[0]), fill=self.nom[3])
+		self.id = self.canvas.create_text(self.nom[1], self.nom[2], font="Time_New_Roman 15",
+										   text="%s: %d PV" %(self.nom[0], self.pv), fill=self.nom[3])
 		self.char = self.canvas.create_rectangle(self.char_x, self.char_y, self.char_x+TILE,
 												 self.char_y+TILE, width=self.relief, fill=self.couleur)
-		self.pivot = self.canvas.create_oval(self.char_x+0.8*TILE, self.char_y+0.8*TILE, self.char_x+TILE//5,
-											 self.char_y+TILE//5, width=2*self.relief, fill='black')
+		self.roue1 = self.canvas.create_rectangle(self.char_x, self.char_y, self.char_x+5*self.relief,
+											 self.char_y+TILE, fill="DarkGrey")
+		self.roue2 = self.canvas.create_rectangle(self.char_x+TILE-5*self.relief, self.char_y, self.char_x+TILE,
+											 self.char_y+TILE, fill="DarkGrey")
 		self.canon = self.canvas.create_line(self.char_x+TILE/2, self.char_y+TILE/2, self.canon_x,
 											 self.canon_y, width=TILE//5+2*self.relief)
+		self.pivot = self.canvas.create_oval(self.char_x+0.5*TILE, self.char_y+0.5*TILE, self.char_x+TILE//5,
+											 self.char_y+TILE//5, width=5*self.relief, fill=self.couleur)
 		self.afficher()
 
 	def afficher(self):
 		"""Fonction qui affiche le char."""
+		self.canvas.itemconfig(self.id, text="%s: %d PV" %(self.nom[0], self.pv) )
 		self.canvas.coords(self.char, self.char_x, self.char_y, self.char_x+TILE, self.char_y+TILE)
-		self.canvas.coords(self.pivot, self.char_x+0.8*TILE, self.char_y+0.8*TILE, self.char_x+TILE//5, self.char_y+TILE//5)
 		self.canvas.coords(self.canon, self.char_x+TILE/2, self.char_y+TILE/2, self.canon_x, self.canon_y)
+		self.canvas.coords(self.pivot, self.char_x+0.25*TILE, self.char_y+0.25*TILE, self.char_x+0.75*TILE, self.char_y+0.75*TILE)
+		if self.dir[1] or self.dir[3]:
+			self.canvas.coords(self.roue1, self.char_x, self.char_y, self.char_x+TILE, self.char_y+5*self.relief)
+			self.canvas.coords(self.roue2, self.char_x, self.char_y+TILE-5*self.relief, self.char_x+TILE, self.char_y+TILE)
+		else:
+			self.canvas.coords(self.roue1, self.char_x, self.char_y, self.char_x+5*self.relief, self.char_y+TILE)
+			self.canvas.coords(self.roue2, self.char_x+TILE-5*self.relief, self.char_y, self.char_x+TILE, self.char_y+TILE)
 
 	def option(self, vitesse=0, relief=0):
 		"""Change les options du char."""
@@ -136,23 +151,23 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 			#Card = Cardinal: Où on va, (d'après pavé numérique)
 			what = False
 			for var in range(len(self.Joueurs)):
-				if (self.char_x > self.Joueurs[var].char_x) and (self.char_x < self.Joueurs[var].char_x+TILE/2)\
-				and (self.char_y-2 > self.Joueurs[var].char_y) and (self.char_y-2 < self.Joueurs[var].char_y+TILE/2)\
+				if (self.char_x > self.Joueurs[var].char_x-TILE) and (self.char_x < self.Joueurs[var].char_x+TILE)\
+				and (self.char_y-2 > self.Joueurs[var].char_y-TILE) and (self.char_y-2 < self.Joueurs[var].char_y+TILE)\
 				and (self.couleur != self.Joueurs[var].couleur) and (card == 8):
 					what = True
 					break
-				elif (self.char_x+1 > self.Joueurs[var].char_x-20) and (self.char_x+1 < self.Joueurs[var].char_x+TILE/2)\
-				and (self.char_y > self.Joueurs[var].char_y-20) and (self.char_y < self.Joueurs[var].char_y+TILE/2)\
+				elif (self.char_x+1 > self.Joueurs[var].char_x-TILE) and (self.char_x+1 < self.Joueurs[var].char_x+TILE)\
+				and (self.char_y > self.Joueurs[var].char_y-TILE) and (self.char_y < self.Joueurs[var].char_y+TILE)\
 				and (self.couleur != self.Joueurs[var].couleur) and (card == 6):
 					what = True
 					break
-				elif (self.char_x-2 > self.Joueurs[var].char_x) and (self.char_x-2 < self.Joueurs[var].char_x+TILE/2)\
-				and (self.char_y > self.Joueurs[var].char_y) and (self.char_y < self.Joueurs[var].char_y+TILE/2)\
+				elif (self.char_x-2 > self.Joueurs[var].char_x-TILE) and (self.char_x-2 < self.Joueurs[var].char_x+TILE)\
+				and (self.char_y > self.Joueurs[var].char_y-TILE) and (self.char_y < self.Joueurs[var].char_y+TILE)\
 				and (self.couleur != self.Joueurs[var].couleur) and (card == 4):
 					what = True
 					break
-				elif (self.char_x > self.Joueurs[var].char_x) and (self.char_x < self.Joueurs[var].char_x+TILE/2)\
-				and (self.char_y+1 > self.Joueurs[var].char_y) and (self.char_y+1 < self.Joueurs[var].char_y+TILE/2)\
+				elif (self.char_x > self.Joueurs[var].char_x-TILE) and (self.char_x < self.Joueurs[var].char_x+TILE)\
+				and (self.char_y+1 > self.Joueurs[var].char_y-TILE) and (self.char_y+1 < self.Joueurs[var].char_y+TILE)\
 				and (self.couleur != self.Joueurs[var].couleur) and (card == 2):
 					what = True
 					break
@@ -247,9 +262,8 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#Les obus arretées sont supprimées
 		for k in obus_del:
 			count += 1
-			kappa = k - count
-			self.canvas.delete(self.fenetre, self.munition[kappa]['obus'])
-			del self.munition[kappa]
+			self.canvas.delete(self.fenetre, self.munition[k-count]['obus'])
+			del self.munition[k-count]
 
 
 	def miner(self, event):
@@ -257,24 +271,24 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		#On crée la mine (un cercle)...
 		self.mine_x = self.char_x + 20 + 32*math.sin(self.alpha+math.pi*1.5)
 		self.mine_y = self.char_y + 20 + 32*math.cos(self.alpha+math.pi*1.5)
-		#...si ses extrémités...
-		coordx = int((self.mine_x-12)/40)
-		coordy = int((self.mine_y-12)/40)
-		coordx2 = int((self.mine_x+12)/40)
-		coordy2 = int((self.mine_y+12)/40)
-		#...ne cogne pas un char...
-		pas2collision_char = True
-		for var in range(len(self.Joueurs)):
-			if (self.mine_x >= self.Joueurs[var].char_x) and (self.mine_x <= self.Joueurs[var].char_x+40)\
-			and (self.mine_y >= self.Joueurs[var].char_y) and (self.mine_y <= self.Joueurs[var].char_y+40):
-				pas2collision_char = False
-		#...ou un mur, ou si une mine a déjà été crée
-		if (self.terrain[coordy][coordx] != '1') and (self.terrain[coordy2][coordx2] != '1')\
-		and (pas2collision_char) and (self.stock_mine):
-			self.mine = self.canvas.create_oval(self.mine_x-12, self.mine_y-12,
-                                                            self.mine_x+12, self.mine_y+12, width=2+2*self.relief, fill=self.couleur)
-			#Pour éviter de mettre plusieurs mines
-			self.stock_mine = 0
+##		#...si ses extrémités...
+##		coordx = int((self.mine_x-12)/40)
+##		coordy = int((self.mine_y-12)/40)
+##		coordx2 = int((self.mine_x+12)/40)
+##		coordy2 = int((self.mine_y+12)/40)
+##		#...ne cogne pas un char...
+##		pas2collision_char = True
+##		for var in range(len(self.Joueurs)):
+##			if (self.mine_x >= self.Joueurs[var].char_x) and (self.mine_x <= self.Joueurs[var].char_x+TILE)\
+##			and (self.mine_y >= self.Joueurs[var].char_y) and (self.mine_y <= self.Joueurs[var].char_y+TILE):
+##				pas2collision_char = False
+##		#...ou un mur, ou si une mine a déjà été crée
+##		if (self.terrain[coordy][coordx] != '1') and (self.terrain[coordy2][coordx2] != '1')\
+##		and (pas2collision_char) and (self.stock_mine):
+		self.mine = self.canvas.create_oval(self.mine_x-12, self.mine_y-12,
+                                                self.mine_x+12, self.mine_y+12, width=2+2*self.relief, fill=self.couleur)
+		#Pour éviter de mettre plusieurs mines
+		self.stock_mine = 0
 
 
 	def minequiexplose(self):
@@ -290,20 +304,18 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 
 	def rip(self):
 		"""===Mort du char (déplacement hors de l'écran pour ne pas créer d'erreur dû au évènement).==="""
-		self.mort = True
-		#Nouvelles positions du char
-		self.char_x = TILE
-		self.char_y = self.graveyard
-		#Calcul des nouvelles positions du canon
-		#self.canon_x = self.char_x + 20 + 32*math.cos(self.alpha)
-		#self.canon_y = self.char_y + 20 - 32*math.sin(self.alpha)
-		#Affichage
-		#self.afficher()
+		self.pv -= 1
+		if self.pv <= 0:
+			self.mort = True
+                        #Nouvelles positions du char
+			self.char_x = TILE
+			self.char_y = self.graveyard
 
 
 	def reborn(self, x, y):
 		"""===Renaissance du char: Réinitialisation des variables==="""
 		self.mort = False
+		self.pv = self.pv2base
 		#Les obus sont supprimés
 		count = 0
 		for k in range(len(self.munition)):
@@ -320,16 +332,15 @@ nom, un tuple sous la forme:nom = ('nom', x, y, couleur)"""
 		self.char_y = self.char_y0
 		#Calcul des nouvelles positions du canon
 		self.alpha = math.pi/2
-		#self.canon_x = self.char_x + 20 + 32*math.cos(self.alpha)
-		#self.canon_y = self.char_y + 20 - 32*math.sin(self.alpha)
+		self.canon_x = self.char_x + 20 + 32*math.cos(self.alpha)
+		self.canon_y = self.char_y + 20 - 32*math.sin(self.alpha)
 
 
 class Ennemi(Char):
 
-	def __init__(self, x, y, couleur, nom, pv=1):
+	def __init__(self, x, y, couleur, nom, pv=16):
 		#Classe qui hérite de le classe Char
-		Char.__init__(self, x, y, couleur, nom)
-		self.pv, self.pv2base = pv, pv
+		Char.__init__(self, x, y, couleur, nom, pv)
 
 	def dirobot(self, event):
 		#Gère la direction pour les Robots
@@ -420,16 +431,6 @@ class Ennemi(Char):
 			#self.canvas.coords(self.canon, self.char_x+20, self.char_y+20, self.canon_x, self.canon_y)
 			self.obus(3, self.alpha, self.canon_x, self.canon_y)
 
-	"""Reprogramation des fonction gérant la mort du char."""
-	def rip(self):
-		self.pv -= 1
-		if self.pv <= 0:
-			Char.rip(self)
-
-	def reborn(self, x, y):
-		Char.reborn(self, x, y)
-		self.pv = self.pv2base
-
 
 #================================LE JEU================================#
 
@@ -454,6 +455,7 @@ class Main():
 
         self.x, self.y = ( len(self.terrain[0]), len(self.terrain)-3 )
 
+        #Charge un terrain existant
         try:
             with open("terrain.txt", "r") as f:
                 self.terrain = []
@@ -470,10 +472,10 @@ class Main():
         self.canvas.pack(side=TOP)
 
         #On crée les chars
-        self.Joueur1 = Char(80, 80, 'Yellow', ('Joueur', 1.5*TILE, 0.5*TILE, 'White'))
-        self.Joueur2 = Ennemi(920, 80, 'Red', ('0rdi', 980, 20, 'DarkRed'))
-        self.Joueur3 = Ennemi(80, 520, 'LimeGreen', ('Ordi', 60, 620, 'DarkGreen'))
-        self.Joueur4 = Ennemi(920, 520, 'DodgerBlue', ('Ordi', 980, 620, 'DarkBlue'))
+        self.Joueur1 = Char(80, 80, 'Yellow', ('Joueur', 3*TILE, TILE/2, 'White'))
+        self.Joueur2 = Ennemi(920, 80, 'Red', ('0rdi', (self.x-3)*TILE, TILE/2, 'DarkRed'))
+        self.Joueur3 = Ennemi(80, 520, 'LimeGreen', ('Ordi', 3*TILE, (self.y-0.5)*TILE, 'DarkGreen'))
+        self.Joueur4 = Ennemi(920, 520, 'DodgerBlue', ('Ordi', (self.x-3)*TILE, (self.y-0.5)*TILE, 'DarkBlue'))
         #On enregistre les Joueurs dans une liste
         self.Joueurs = [self.Joueur1, self.Joueur2, self.Joueur3, self.Joueur4]
 
