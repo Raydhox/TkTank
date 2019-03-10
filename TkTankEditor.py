@@ -16,7 +16,8 @@
 #==================================================================================================
 
 #On import les modules nécessaires
-from tkinter import*
+from tkinter import *
+from tkinter.filedialog import askopenfilename, asksaveasfilename
 import math, random
 
 TILE = 32
@@ -43,7 +44,8 @@ class Main():
         self.x, self.y = ( len(self.terrain[0]), len(self.terrain)-2 )
 
         try:
-            with open("terrain.txt", "r") as f:
+            filename = askopenfilename(defaultextension='*.tktank', filetypes=[('supported', ('*.tktank'))])
+            with open(filename, "r") as f:
                 self.terrain = []
                 for k in range(self.y):
                     self.terrain.append(f.readline()[:self.x])
@@ -79,7 +81,8 @@ class Main():
         self.montrer()
 
     def save(self, event):
-        with open('terrain.txt', 'w') as f:
+        filename = asksaveasfilename(defaultextension='*.tktank', filetypes=[('supported', ('*.tktank'))])
+        with open(filename, 'w') as f:
             for k in range(self.y):
                 f.write(self.terrain[k] + "\n")
 
@@ -90,8 +93,6 @@ class Main():
         self.canvas.bind('<Button-1>', self.change1)
         self.canvas.bind('<Button-2>', self.save)
         self.canvas.bind('<Button-3>', self.change0)
-        #Et on lance la boucle
-        self.boucle()
         #On lance le tout
         self.fenetre.mainloop()           
 
@@ -99,7 +100,7 @@ class Main():
 #On lance le jeu
 racine = Main()
 racine.afficher()
-racine.fenetre.mainloop()
+
 
 
 
